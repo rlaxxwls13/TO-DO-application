@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "opensource_7",
+    "slug": "opensource_7",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "opensource_7"
+}
