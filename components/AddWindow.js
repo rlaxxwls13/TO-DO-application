@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, Button} from 'react-native'
+import { StyleSheet, View, TextInput, Button, Text} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Tags } from './Tag'
 import CircleButton from './CircleButton'
@@ -34,9 +34,8 @@ export default function AddWindow({
   const hideDatePicker = () => setDatePickerVisable(false)
   //날짜를 state에 저장하는 부분
   const handleConfirm = (date) => {
-    //날짜가 선택되었을 때 warn으로 선택된 날짜를 알려줌(테스트용)
-    console.warn(date)
-    setAddTodoDate(date)
+    //date는 object형식임에 주의할것
+    setAddTodoDate((current)=>date);
     hideDatePicker();
   }
 
@@ -67,6 +66,7 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
+        <Text>{"날짜:" + JSON.stringify(addTodoDate)}</Text>
         <Button title="날짜" style={styles.datePicker} onPress={showDatePicker} />
           <DateTimePickerModal
             isVisible={DatePickerVisable}
@@ -99,7 +99,9 @@ export default function AddWindow({
                   name: addTodoTitle,
                   desc: addTodoDesc,
                   tags: addTodoTags,
+                  date: addTodoDate
                 })
+                console.warn(addTodoDate);
               }
             }}
           >
