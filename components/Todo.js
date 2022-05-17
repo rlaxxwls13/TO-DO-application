@@ -15,6 +15,7 @@ export const Todo = ({ item, onPress }) => {
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
+      <Text>{item.date}</Text>
     </Pressable>
   );
 };
