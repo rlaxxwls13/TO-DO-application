@@ -20,7 +20,7 @@ export default function AddWindow({ item = undefined, tags, onSubmit = () => {},
   const [addTodoDesc, setAddTodoDesc] = useState("");
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
   const [addTodoDate, setAddTodoDate] = useState("");
-  const [DatePickerVisable, setDatePickerVisable] = useState(false);
+  const [datePickerVisable, setDatePickerVisable] = useState(false);
 
   useEffect(() => {
     if (item !== undefined) {
@@ -35,7 +35,7 @@ export default function AddWindow({ item = undefined, tags, onSubmit = () => {},
   const showDatePicker = () => setDatePickerVisable(true);
   const hideDatePicker = () => setDatePickerVisable(false);
   //날짜를 state에 저장하는 부분
-  const handleConfirm = (date) => {
+  const onDateConfirm = (date) => {
     //date는 object형식임에 주의할것
     setAddTodoDate((current) => date);
     hideDatePicker();
@@ -66,9 +66,9 @@ export default function AddWindow({ item = undefined, tags, onSubmit = () => {},
         <Text>{"날짜:" + JSON.stringify(addTodoDate)}</Text>
         <Button title="날짜" style={styles.datePicker} onPress={showDatePicker} />
         <DateTimePickerModal
-          isVisible={DatePickerVisable}
+          isVisible={datePickerVisable}
           mode="date"
-          onConfirm={handleConfirm}
+          onConfirm={onDateConfirm}
           onCancel={hideDatePicker}
         />
         <View style={styles.buttons}>
@@ -98,7 +98,6 @@ export default function AddWindow({ item = undefined, tags, onSubmit = () => {},
                   tags: addTodoTags,
                   date: addTodoDate,
                 });
-                console.warn(addTodoDate);
               }
             }}
           >
