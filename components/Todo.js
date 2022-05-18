@@ -1,6 +1,6 @@
-import { StyleSheet, FlatList, Text, Pressable } from "react-native";
-import { useState } from "react";
-import { Tags } from "./Tag";
+import { StyleSheet, FlatList, Text, Pressable } from 'react-native';
+import { useState } from 'react';
+import { Tags } from './Tag';
 
 /**
  * 할일 리스트 UI
@@ -9,7 +9,11 @@ import { Tags } from "./Tag";
  * @returns
  */
 export const Todos = ({ data, onPress = () => {} }) => (
-  <FlatList data={data} renderItem={({ item }) => <Todo item={item} onPress={onPress} />} style={styles.todos} />
+  <FlatList
+    data={data}
+    renderItem={({ item }) => <Todo item={item} onPress={onPress} />}
+    style={styles.todos}
+  />
 );
 
 /**
@@ -35,19 +39,19 @@ export const Todo = ({ item, onPress }) => {
 const styles = StyleSheet.create({
   todos: {
     flex: 1,
-    flexDirection: "column",
-    width: "100%",
+    flexDirection: 'column',
+    width: '100%',
   },
 
   todo: {
-    width: "90%",
+    width: '90%',
     height: 100,
     borderRadius: 10,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: "#ff9e9e",
+    borderColor: '#ff9e9e',
     padding: 8,
     marginBottom: 10,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
 });

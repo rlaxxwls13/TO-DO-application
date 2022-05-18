@@ -1,11 +1,17 @@
-import { StyleSheet, SafeAreaView, StatusBar, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
-import { useTodo } from "./lib/TodoStore";
-import { Octicons } from "@expo/vector-icons";
-import { Tags } from "./components/Tag";
-import { Todos } from "./components/Todo";
-import AddWindow from "./components/AddWindow";
-import CircleButton from "./components/CircleButton";
+import {
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useState } from 'react';
+import { useTodo } from './lib/TodoStore';
+import { Octicons } from '@expo/vector-icons';
+import { Tags } from './components/Tag';
+import { Todos } from './components/Todo';
+import AddWindow from './components/AddWindow';
+import CircleButton from './components/CircleButton';
 
 export default function App() {
   const { todos, tags } = useTodo();
@@ -52,13 +58,30 @@ export default function App() {
           }}
         />
         <Todos
-          data={selectedTag.length === 0 ? todos.data : todos.data.filter((v) => multiInlcudes(v.tags, selectedTag))}
+          data={
+            selectedTag.length === 0
+              ? todos.data
+              : todos.data.filter((v) => multiInlcudes(v.tags, selectedTag))
+          }
           onPress={(item) => openEdit(item)}
         />
-        <CircleButton backgroundColor="#ffdbe7" onPress={() => setAddWindow(true)} style={styles.addButton}>
+        <CircleButton
+          backgroundColor="#ffdbe7"
+          onPress={() => setAddWindow(true)}
+          style={styles.addButton}
+        >
           <Octicons name="plus" size={24} color="black" borderRadius={100} />
         </CircleButton>
-        {addWindow ? <AddWindow tags={tags} onSubmit={onSubmit} onCancel={onCancel} item={selected} /> : <></>}
+        {addWindow ? (
+          <AddWindow
+            tags={tags}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+            item={selected}
+          />
+        ) : (
+          <></>
+        )}
       </SafeAreaView>
     </>
   );
@@ -77,16 +100,16 @@ function multiInlcudes(arr, search) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 10,
   },
 
   addButton: {
     width: 50,
     height: 50,
-    position: "absolute",
+    position: 'absolute',
     bottom: 10,
     right: 10,
   },

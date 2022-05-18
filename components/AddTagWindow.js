@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { View, StyleSheet, TextInput } from "react-native";
-import CircleButton from "./CircleButton";
-import { ColorSwatch } from "./ColorSwatch";
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { useState } from 'react';
+import { View, StyleSheet, TextInput } from 'react-native';
+import CircleButton from './CircleButton';
+import { ColorSwatch } from './ColorSwatch';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 /**
  * 태그 추가 창
@@ -11,19 +11,23 @@ import { SimpleLineIcons } from "@expo/vector-icons";
  * @returns
  */
 export default function AddTagWindow({ onSubmit, onCancel }) {
-  const [name, setName] = useState("");
-  const selectedState = useState("");
+  const [name, setName] = useState('');
+  const selectedState = useState('');
   const [selected, setSelected] = selectedState;
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <TextInput style={styles.name} placeholder="태그 이름" onChangeText={setName} />
+        <TextInput
+          style={styles.name}
+          placeholder="태그 이름"
+          onChangeText={setName}
+        />
         <ColorSwatch selectedState={selectedState} />
         <View style={styles.buttons}>
           <CircleButton
             onPress={() => {
-              if (name !== "" && selected !== "") {
+              if (name !== '' && selected !== '') {
                 onSubmit({
                   name,
                   color: selected,
@@ -44,32 +48,32 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ffd6d655",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffd6d655',
   },
 
   content: {
     width: 400,
-    backgroundColor: "white",
-    alignItems: "center",
+    backgroundColor: 'white',
+    alignItems: 'center',
     padding: 30,
     borderRadius: 20,
   },
 
   name: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 25,
     marginBottom: 10,
   },
 
   buttons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     bottom: 0,
   },
 });
