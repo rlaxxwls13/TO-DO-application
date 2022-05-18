@@ -1,6 +1,14 @@
 import { StyleSheet, FlatList, Text, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 
+/**
+ * 태그 리스트 UI
+ * @param {*} data 태그 오브젝트 배열
+ * @param {*} onPress 클릭 이벤트, 전달 값:태그 오브젝트
+ * @param {*} style
+ * @param {*} prePressed 이미 선택되어 있는 태그 오브젝트 배열
+ * @returns
+ */
 export const Tags = ({ data, onPress = undefined, style, prePressed = [] }) => (
   <FlatList
     data={data}
@@ -10,6 +18,13 @@ export const Tags = ({ data, onPress = undefined, style, prePressed = [] }) => (
   />
 );
 
+/**
+ * 태그 UI
+ * @param {*} item 태그 오브젝트
+ * @param {*} onPress 클릭 이벤트, 전달 값:태그 오브젝트
+ * @param {*} prePressed 이미 선택되어 있는 태그 오브젝트 배열
+ * @returns
+ */
 export const Tag = ({ item, onPress, prePressed }) => {
   let [pressed, setPressed] = useState(false);
 

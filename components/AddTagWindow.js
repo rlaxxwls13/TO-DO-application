@@ -4,6 +4,12 @@ import CircleButton from "./CircleButton";
 import { ColorSwatch } from "./ColorSwatch";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
+/**
+ * 태그 추가 창
+ * @param {void} onSubmit 확인 버튼 이벤트, 전달 값: 태그 오브젝트
+ * @param {void} onCancel 취소 버튼 이벤트
+ * @returns
+ */
 export default function AddTagWindow({ onSubmit, onCancel }) {
   const [name, setName] = useState("");
   const selectedState = useState("");
