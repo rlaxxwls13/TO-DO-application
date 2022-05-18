@@ -10,12 +10,13 @@ export const Todo = ({ item, onPress }) => {
   let [pressed, setPressed] = useState(false);
   const _onPress = () => {
     onPress(item);
+    console.warn(item);
   };
   return (
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <Text>{item.date}</Text>
+      <Text>{"날짜:" + JSON.stringify(item.date)}</Text>
     </Pressable>
   );
 };

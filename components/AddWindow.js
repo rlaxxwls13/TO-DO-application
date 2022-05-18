@@ -17,7 +17,7 @@ export default function AddWindow({
   const [addTodoTitle, setAddTodoTitle] = useState('')
   const [addTodoDesc, setAddTodoDesc] = useState('')
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
-  const [addTodoDate, setAddTodoDate] = useState('')
+  const [addTodoDate, setAddTodoDate] = useState(new Date())
   const [DatePickerVisable, setDatePickerVisable] = useState(false)
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function AddWindow({
   const hideDatePicker = () => setDatePickerVisable(false)
   //날짜를 state에 저장하는 부분
   const handleConfirm = (date) => {
-    //date는 object형식임에 주의할것
+    //date는 object임에 주의할것
     setAddTodoDate((current)=>date);
     hideDatePicker();
   }
@@ -67,7 +67,7 @@ export default function AddWindow({
         />
         {/* 날짜 추가하는 버튼 */}
         <Text>{"날짜:" + JSON.stringify(addTodoDate)}</Text>
-        <Button title="날짜" style={styles.datePicker} onPress={showDatePicker} />
+        <Button title="날짜" style={styles.datePicker} onPress={showDatePicker} value={addTodoDate} />
           <DateTimePickerModal
             isVisible={DatePickerVisable}
             mode="date"
@@ -99,9 +99,8 @@ export default function AddWindow({
                   name: addTodoTitle,
                   desc: addTodoDesc,
                   tags: addTodoTags,
-                  date: addTodoDate
+                  date: addTodoDate,
                 })
-                console.warn(addTodoDate);
               }
             }}
           >
@@ -124,10 +123,11 @@ export default function AddWindow({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 0,
+    top: -100,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 100,
+    height: '120%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffd6d655',
@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   datePicker:{
     textAlign: "center",
     backgroundColor: "#ffffff",
-
   },
 
   buttons: {
