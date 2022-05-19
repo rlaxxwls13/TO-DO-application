@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 
+/**
+ * 색상 견본(Swatch)
+ * @param {*} detail
+ * @param {*} col 열 개수
+ * @param {*} onPress 선택시 이벤트, 전달 값: 색 Hex 값
+ * @param {*} selectedState 선택시 적용될 React State
+ * @returns
+ */
 export function ColorSwatch({ detail = 2, col = 5, onPress = () => {}, selectedState }) {
   const [swatch, setSwatch] = useState([]);
   const [selected, setSelected] = selectedState;
