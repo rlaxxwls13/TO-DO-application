@@ -1,54 +1,61 @@
-import { StyleSheet, View, TextInput, Button, Text} from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { Tags } from './Tag'
-import CircleButton from './CircleButton'
-import { SimpleLineIcons } from '@expo/vector-icons'
-import AddTagWindow from './AddTagWindow'
+import { StyleSheet, View, TextInput, Button, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Tags } from './Tag';
+import CircleButton from './CircleButton';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import AddTagWindow from './AddTagWindow';
 //dateTimePicker 임포트(날짜 선택창 추가하는 라이브러리임)
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+/**
+ * 할일 추가 창
+ * @param {object} item 편집시 할일 오브젝트 전달
+ * @param {void} onSubmit 확인 버튼 이벤트, 전달 값: 할일 오브젝트
+ * @param {void} onCancel 취소 버튼 이벤트
+ * @returns
+ */
 export default function AddWindow({
   item = undefined,
   tags,
   onSubmit = () => {},
   onCancel = () => {},
 }) {
-  const [addTodoTags, setAddTodoTags] = useState([])
-  const [addTodoTitle, setAddTodoTitle] = useState('')
-  const [addTodoDesc, setAddTodoDesc] = useState('')
+  const [addTodoTags, setAddTodoTags] = useState([]);
+  const [addTodoTitle, setAddTodoTitle] = useState('');
+  const [addTodoDesc, setAddTodoDesc] = useState('');
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
-  const [addTodoDate, setAddTodoDate] = useState(new Date())
-  const [DatePickerVisable, setDatePickerVisable] = useState(false)
+  const [addTodoDate, setAddTodoDate] = useState('');
+  const [datePickerVisable, setDatePickerVisable] = useState(false);
 
   useEffect(() => {
     if (item !== undefined) {
-      setAddTodoTags(item.tags)
-      setAddTodoTitle(item.name)
-      setAddTodoDesc(item.desc)
-      setAddTodoDate(item.date)
+      setAddTodoTags(item.tags);
+      setAddTodoTitle(item.name);
+      setAddTodoDesc(item.desc);
+      setAddTodoDate(item.date);
     }
-  }, [])
+  }, []);
 
   //날짜 선택기를 보여주고 숨기는 함수
-  const showDatePicker = () => setDatePickerVisable(true)
-  const hideDatePicker = () => setDatePickerVisable(false)
+  const showDatePicker = () => setDatePickerVisable(true);
+  const hideDatePicker = () => setDatePickerVisable(false);
   //날짜를 state에 저장하는 부분
-  const handleConfirm = (date) => {
-    //date는 object임에 주의할것
-    setAddTodoDate((current)=>date);
+  const onDateConfirm = (date) => {
+    //date는 object형식임에 주의할것
+    setAddTodoDate((current) => date);
     hideDatePicker();
-  }
+  };
 
-  const [addTagWindow, setAddTagWindow] = useState(false)
+  const [addTagWindow, setAddTagWindow] = useState(false);
 
   const onTagSubmit = ({ name, color }) => {
-    setAddTagWindow(false)
-    tags.push({ name, color })
-  }
+    setAddTagWindow(false);
+    tags.push({ name, color });
+  };
 
   const onTagCancel = () => {
-    setAddTagWindow(false)
-  }
+    setAddTagWindow(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -66,23 +73,27 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
-        <Text>{"날짜:" + JSON.stringify(addTodoDate)}</Text>
-        <Button title="날짜" style={styles.datePicker} onPress={showDatePicker} value={addTodoDate} />
-          <DateTimePickerModal
-            isVisible={DatePickerVisable}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
+        <Text>{'날짜:' + JSON.stringify(addTodoDate)}</Text>
+        <Button
+          title="날짜"
+          style={styles.datePicker}
+          onPress={showDatePicker}
+        />
+        <DateTimePickerModal
+          isVisible={datePickerVisable}
+          mode="date"
+          onConfirm={onDateConfirm}
+          onCancel={hideDatePicker}
+        />
         <View style={styles.buttons}>
           <Tags
             data={tags.data}
             prePressed={item === undefined ? [] : item.tags}
             onPress={(item) => {
               if (addTodoTags.includes(item)) {
-                setAddTodoTags(addTodoTags.filter((v) => v !== item))
+                setAddTodoTags(addTodoTags.filter((v) => v !== item));
               } else {
-                setAddTodoTags([...addTodoTags, item])
+                setAddTodoTags([...addTodoTags, item]);
               }
             }}
           />
@@ -100,7 +111,7 @@ export default function AddWindow({
                   desc: addTodoDesc,
                   tags: addTodoTags,
                   date: addTodoDate,
-                })
+                });
               }
             }}
           >
@@ -117,17 +128,16 @@ export default function AddWindow({
         <></>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: -100,
+    top: 0,
     left: 0,
     right: 0,
-    bottom: 100,
-    height: '120%',
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffd6d655',
@@ -158,9 +168,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  datePicker:{
-    textAlign: "center",
-    backgroundColor: "#ffffff",
+  datePicker: {
+    textAlign: 'center',
+    backgroundColor: '#ffffff',
   },
 
   buttons: {
@@ -171,4 +181,4 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 5,
   },
-})
+});
