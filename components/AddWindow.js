@@ -27,6 +27,8 @@ export default function AddWindow({
   const [addTodoStartDate, setAddTodoStartDate] = useState(new Date());
   const [addTodoEndDate, setAddTodoEndate] = useState(new Date().setDate(new Date() + 1));
   const [datePickerVisable, setDatePickerVisable] = useState(false);
+  //시작 날짜를 선택하는지 확인하는 state
+  const [datePickerIsStart, setDatePickerIsStart] = useState(true);
 
   useEffect(() => {
     if (item !== undefined) {
@@ -37,12 +39,15 @@ export default function AddWindow({
     }
   }, []);
 
-  //날짜 선택기를 보여주고 숨기는 함수
-  const showDatePicker = (start) => setDatePickerVisable(true, start);
+  //날짜 선택기를 보여주고 숨기는 함수 + 어떤 날자를 선택하는지 결정함
+  const showDatePicker = (start) => {
+    setDatePickerVisable(true);
+    setDatePickerIsStart(start);
+  };
   const hideDatePicker = () => setDatePickerVisable(false);
   //날짜를 state에 저장하는 부분
-  const onDateConfirm = (date, start) => {
-    if (start) setAddTodoStartDate((current) => date);
+  const onDateConfirm = (date) => {
+    if (datePickerIsStart) setAddTodoStartDate((current) => date);
     else setAddTodoEndate((current) => date);
     hideDatePicker();
   };

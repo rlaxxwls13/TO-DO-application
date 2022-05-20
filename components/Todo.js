@@ -1,7 +1,6 @@
 import { StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Tags } from './Tag';
-import Progress from 'react-native-progress';
 
 /**
  * 할일 리스트 UI
