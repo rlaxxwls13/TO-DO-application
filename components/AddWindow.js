@@ -24,7 +24,8 @@ export default function AddWindow({
   const [addTodoTitle, setAddTodoTitle] = useState('');
   const [addTodoDesc, setAddTodoDesc] = useState('');
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
-  const [addTodoDate, setAddTodoDate] = useState('');
+  const [addTodoStartDate, setAddTodoStartDate] = useState(new Date());
+  const [addTodoEndDate, setAddTodoEndate] = useState(new Date().setDate(new Date() + 1));
   const [datePickerVisable, setDatePickerVisable] = useState(false);
 
   useEffect(() => {
@@ -32,17 +33,17 @@ export default function AddWindow({
       setAddTodoTags(item.tags);
       setAddTodoTitle(item.name);
       setAddTodoDesc(item.desc);
-      setAddTodoDate(item.date);
+      setAddTodoStartDate(item.date);
     }
   }, []);
 
   //날짜 선택기를 보여주고 숨기는 함수
-  const showDatePicker = () => setDatePickerVisable(true);
+  const showDatePicker = (start) => setDatePickerVisable(true, start);
   const hideDatePicker = () => setDatePickerVisable(false);
   //날짜를 state에 저장하는 부분
-  const onDateConfirm = (date) => {
-    //date는 object형식임에 주의할것
-    setAddTodoDate((current) => date);
+  const onDateConfirm = (date, start) => {
+    if (start) setAddTodoStartDate((current) => date);
+    else setAddTodoEndate((current) => date);
     hideDatePicker();
   };
 
@@ -73,12 +74,20 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
-        <Text>{'날짜:' + JSON.stringify(addTodoDate)}</Text>
+        <div>
+          <Text>{'시작 날짜:' + JSON.stringify(addTodoStartDate)}</Text>
         <Button
-          title="날짜"
+          title="시작 날짜"
           style={styles.datePicker}
-          onPress={showDatePicker}
+          onPress={showDatePicker(true)}
         />
+        <Text>{'종료 날짜:' + JSON.stringify(addTodoEndDate)}</Text>
+        <Button
+          title="종료 날짜"
+          style={styles.datePicker}
+          onPress={showDatePicker(false)}
+        />
+        </div>
         <DateTimePickerModal
           isVisible={datePickerVisable}
           mode="date"
@@ -110,7 +119,7 @@ export default function AddWindow({
                   name: addTodoTitle,
                   desc: addTodoDesc,
                   tags: addTodoTags,
-                  date: addTodoDate,
+                  date: addTodoStartDate,
                 });
               }
             }}

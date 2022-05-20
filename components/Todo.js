@@ -1,10 +1,11 @@
 import { StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Tags } from './Tag';
+import Progress from 'react-native-progress';
 
 /**
  * 할일 리스트 UI
- * @param {{name: string, desc: string, tags: typeof tagState, date: object}[]} data 할일 오브젝트 배열
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate, endDate}[]} data 할일 오브젝트 배열
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @returns
  */
@@ -18,7 +19,7 @@ export const Todos = ({ data, onPress = () => {} }) => (
 
 /**
  * 할일 UI
- * @param {{name: string, desc: string, tags: typeof tagState, date: object}} item 할일 오브젝트
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate, endDate}} item 할일 오브젝트
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @returns
  */
@@ -31,7 +32,10 @@ export const Todo = ({ item, onPress }) => {
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <Text>{item.date}</Text>
+      <div>
+        <Text>{item.startDate}</Text>
+        <Text>{item.endDate}</Text>
+      </div>
     </Pressable>
   );
 };
