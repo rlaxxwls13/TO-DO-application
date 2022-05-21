@@ -22,11 +22,11 @@ export default function App() {
   const onSubmit = ({ name, desc, tags }) => {
     setAddWindow(false);
     if (selected === undefined) {
-      todos.push({ name, desc, tags, date: 0 });
+      todos.push({ name, desc, tags, startDate, endDate});
     } else {
       todos.edit(
         todos.data.findIndex((v) => v === selected),
-        { name, desc, tags, date: 0 }
+        { name, desc, tags, startDate, endDate}
       );
       setSelected(undefined);
     }
