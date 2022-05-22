@@ -25,7 +25,9 @@ export default function AddWindow({
   const [addTodoDesc, setAddTodoDesc] = useState('');
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
   const [addTodoStartDate, setAddTodoStartDate] = useState(new Date());
-  const [addTodoEndDate, setAddTodoEndate] = useState(new Date().setDate(new Date() + 1));
+  const [addTodoEndDate, setAddTodoEndate] = useState(
+    new Date(addTodoStartDate.getTime() + 8.64e7)
+  );
   const [datePickerVisable, setDatePickerVisable] = useState(false);
   //시작 날짜를 선택하는지 확인하는 state
   const [datePickerIsStart, setDatePickerIsStart] = useState(true);
@@ -35,7 +37,8 @@ export default function AddWindow({
       setAddTodoTags(item.tags);
       setAddTodoTitle(item.name);
       setAddTodoDesc(item.desc);
-      setAddTodoStartDate(item.date);
+      setAddTodoStartDate(item.startDate);
+      setAddTodoEndate(item.endDate);
     }
   }, []);
 
@@ -79,20 +82,24 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
-        <div>
-          <Text>{'시작 날짜:' + JSON.stringify(addTodoStartDate)}</Text>
-        <Button
-          title="시작 날짜"
-          style={styles.datePicker}
-          onPress={showDatePicker(true)}
-        />
-        <Text>{'종료 날짜:' + JSON.stringify(addTodoEndDate)}</Text>
-        <Button
-          title="종료 날짜"
-          style={styles.datePicker}
-          onPress={showDatePicker(false)}
-        />
-        </div>
+        <View style={styles.datePicker}>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(true)}
+          >
+            <Text>시작일</Text>
+            <Text>{addTodoStartDate.toLocaleDateString()}</Text>
+          </CircleButton>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(false)}
+          >
+            <Text>종료일</Text>
+            <Text>{addTodoEndDate.toLocaleDateString()}</Text>
+          </CircleButton>
+        </View>
         <DateTimePickerModal
           isVisible={datePickerVisable}
           mode="date"
@@ -124,7 +131,8 @@ export default function AddWindow({
                   name: addTodoTitle,
                   desc: addTodoDesc,
                   tags: addTodoTags,
-                  date: addTodoStartDate,
+                  startDate: addTodoStartDate,
+                  endDate: addTodoEndDate,
                 });
               }
             }}
@@ -183,8 +191,7 @@ const styles = StyleSheet.create({
   },
 
   datePicker: {
-    textAlign: 'center',
-    backgroundColor: '#ffffff',
+    flexDirection: 'row',
   },
 
   buttons: {
