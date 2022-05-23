@@ -25,9 +25,12 @@ export default function AddWindow({
   const [addTodoDesc, setAddTodoDesc] = useState('');
   //날짜를 Todo에 저장할 state + 날짜 선택기를 표시할 때 쓰는 state
   const [addTodoStartDate, setAddTodoStartDate] = useState(new Date());
-  const [addTodoEndDate, setAddTodoEndate] = useState(new Date().setDate(new Date() + 1));
+  const [addTodoEndDate, setAddTodoEndate] = useState(
+    new Date(addTodoStartDate.getTime() + 8.64e7)
+  );
   const [datePickerVisable, setDatePickerVisable] = useState(false);
   //시작 날짜를 선택하는지 확인하는 state
+  const [datePickerIsStart, setDatePickerIsStart] = useState(true);
 
   useEffect(() => {
     if (item !== undefined) {
@@ -35,16 +38,20 @@ export default function AddWindow({
       setAddTodoTitle(item.name);
       setAddTodoDesc(item.desc);
       setAddTodoStartDate(item.startDate);
+      setAddTodoEndate(item.endDate);
     }
   }, []);
 
-  //날짜 선택기를 보여주고 숨기는 함수
-  const showDatePicker = () => setDatePickerVisable(true);;
+  //날짜 선택기를 보여주고 숨기는 함수 + 어떤 날자를 선택하는지 결정함
+  const showDatePicker = (start) => {
+    setDatePickerVisable(true);
+    setDatePickerIsStart(start);
+  };
   const hideDatePicker = () => setDatePickerVisable(false);
-
   //날짜를 state에 저장하는 부분
   const onDateConfirm = (date) => {
-    setAddTodoStartDate((current) => date);
+    if (datePickerIsStart) setAddTodoStartDate((current) => date);
+    else setAddTodoEndate((current) => date);
     hideDatePicker();
   };
 
@@ -75,12 +82,24 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
-        <Text>{'시작 날짜:' + JSON.stringify(addTodoStartDate)}</Text>
-        <Button
-          title="시작 날짜"
-          style={styles.datePicker}
-          onPress={showDatePicker}
-        />
+        <View style={styles.datePicker}>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(true)}
+          >
+            <Text>시작일</Text>
+            <Text>{addTodoStartDate.toLocaleDateString()}</Text>
+          </CircleButton>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(false)}
+          >
+            <Text>종료일</Text>
+            <Text>{addTodoEndDate.toLocaleDateString()}</Text>
+          </CircleButton>
+        </View>
         <DateTimePickerModal
           isVisible={datePickerVisable}
           mode="date"
@@ -113,6 +132,7 @@ export default function AddWindow({
                   desc: addTodoDesc,
                   tags: addTodoTags,
                   startDate: addTodoStartDate,
+                  endDate: addTodoEndDate,
                 });
               }
             }}
@@ -171,8 +191,7 @@ const styles = StyleSheet.create({
   },
 
   datePicker: {
-    textAlign: 'center',
-    backgroundColor: '#ffffff',
+    flexDirection: 'row',
   },
 
   buttons: {

@@ -19,14 +19,14 @@ export default function App() {
   const [selected, setSelected] = useState(undefined);
   const [selectedTag, setSelectedTag] = useState([]);
 
-  const onSubmit = ({ name, desc, tags, startDate, endDate }) => {
+  const onSubmit = ({ name, desc, tags }) => {
     setAddWindow(false);
     if (selected === undefined) {
-      todos.push({ name, desc, tags, startDate, endDate });
+      todos.push({ name, desc, tags, startDate, endDate});
     } else {
       todos.edit(
         todos.data.findIndex((v) => v === selected),
-        { name, desc, tags, startDate, endDate }
+        { name, desc, tags, startDate, endDate}
       );
       setSelected(undefined);
     }
