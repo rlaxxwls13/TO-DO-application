@@ -19,7 +19,7 @@ export default function App() {
   const [selected, setSelected] = useState(undefined);
   const [selectedTag, setSelectedTag] = useState([]);
 
-  const onSubmit = ({ name, desc, tags }) => {
+  const onSubmit = ({ name, desc, tags, startDate, endDate }) => {
     setAddWindow(false);
     if (selected === undefined) {
       todos.push({ name, desc, tags, startDate, endDate});

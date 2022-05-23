@@ -32,8 +32,8 @@ export const Todo = ({ item, onPress }) => {
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
       <View>
-        <Text>{item.startDate.toLocaleDateString()}</Text>
-        <Text>{item.endDate.toLocaleDateString()}</Text>
+        <Text>{"시작일: " + item.startDate.toLocaleDateString()}</Text>
+        <Text>{"종료일: " + item.endDate.toLocaleDateString()}</Text>
       </View>
     </Pressable>
   );
