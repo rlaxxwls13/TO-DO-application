@@ -31,10 +31,8 @@ export const Todo = ({ item, onPress }) => {
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <div>
-        <Text>{item.startDate}</Text>
-        <Text>{item.endDate}</Text>
-      </div>
+      <Text>{JSON.stringify(item.startDate)}</Text>
+      <Text>{JSON.stringify(item.endDate)}</Text>
     </Pressable>
   );
 };

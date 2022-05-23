@@ -28,27 +28,23 @@ export default function AddWindow({
   const [addTodoEndDate, setAddTodoEndate] = useState(new Date().setDate(new Date() + 1));
   const [datePickerVisable, setDatePickerVisable] = useState(false);
   //시작 날짜를 선택하는지 확인하는 state
-  const [datePickerIsStart, setDatePickerIsStart] = useState(true);
 
   useEffect(() => {
     if (item !== undefined) {
       setAddTodoTags(item.tags);
       setAddTodoTitle(item.name);
       setAddTodoDesc(item.desc);
-      setAddTodoStartDate(item.date);
+      setAddTodoStartDate(item.startDate);
     }
   }, []);
 
-  //날짜 선택기를 보여주고 숨기는 함수 + 어떤 날자를 선택하는지 결정함
-  const showDatePicker = (start) => {
-    setDatePickerVisable(true);
-    setDatePickerIsStart(start);
-  };
+  //날짜 선택기를 보여주고 숨기는 함수
+  const showDatePicker = () => setDatePickerVisable(true);;
   const hideDatePicker = () => setDatePickerVisable(false);
+
   //날짜를 state에 저장하는 부분
   const onDateConfirm = (date) => {
-    if (datePickerIsStart) setAddTodoStartDate((current) => date);
-    else setAddTodoEndate((current) => date);
+    setAddTodoStartDate((current) => date);
     hideDatePicker();
   };
 
@@ -79,20 +75,12 @@ export default function AddWindow({
           value={addTodoDesc}
         />
         {/* 날짜 추가하는 버튼 */}
-        <div>
-          <Text>{'시작 날짜:' + JSON.stringify(addTodoStartDate)}</Text>
+        <Text>{'시작 날짜:' + JSON.stringify(addTodoStartDate)}</Text>
         <Button
           title="시작 날짜"
           style={styles.datePicker}
-          onPress={showDatePicker(true)}
+          onPress={showDatePicker}
         />
-        <Text>{'종료 날짜:' + JSON.stringify(addTodoEndDate)}</Text>
-        <Button
-          title="종료 날짜"
-          style={styles.datePicker}
-          onPress={showDatePicker(false)}
-        />
-        </div>
         <DateTimePickerModal
           isVisible={datePickerVisable}
           mode="date"
@@ -124,7 +112,7 @@ export default function AddWindow({
                   name: addTodoTitle,
                   desc: addTodoDesc,
                   tags: addTodoTags,
-                  date: addTodoStartDate,
+                  startDate: addTodoStartDate,
                 });
               }
             }}
