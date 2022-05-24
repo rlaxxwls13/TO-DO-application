@@ -2,99 +2,81 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  TouchableOpacity,
+  Dimensions,
+  Text,
   View,
+  Animated,
+  Easing,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTodo } from './lib/TodoStore';
-import { Octicons } from '@expo/vector-icons';
-import { Tags } from './components/Tag';
-import { Todos } from './components/Todo';
-import AddWindow from './components/AddWindow';
+import TodoTab from './tabs/TodoTab';
 import CircleButton from './components/CircleButton';
+import CalenderTab from './tabs/CalenderTab';
+import StatTab from './tabs/StatTab';
+
+const deviceWidth = Dimensions.get('window').width;
 
 export default function App() {
   const { todos, tags } = useTodo();
-  const [addWindow, setAddWindow] = useState(false);
-  const [selected, setSelected] = useState(undefined);
-  const [selectedTag, setSelectedTag] = useState([]);
 
-  const onSubmit = ({ name, desc, tags, startDate, endDate }) => {
-    setAddWindow(false);
-    if (selected === undefined) {
-      todos.push({ name, desc, tags, startDate, endDate});
-    } else {
-      todos.edit(
-        todos.data.findIndex((v) => v === selected),
-        { name, desc, tags, startDate, endDate}
-      );
-      setSelected(undefined);
-    }
-  };
+  const tabs = [
+    {
+      content: <CalenderTab />,
+      menu: <Text>Calender</Text>,
+    },
+    {
+      content: <TodoTab todos={todos} tags={tags} />,
+      menu: <Text>Todos</Text>,
+    },
+    {
+      content: <StatTab />,
+      menu: <Text>Stat</Text>,
+    },
+  ];
 
-  const onCancel = () => {
-    setSelected(undefined);
-    setAddWindow(false);
-  };
+  const [selected, setSelected] = useState(1);
 
-  const openEdit = (item) => {
-    setAddWindow(true);
-    setSelected(item);
-  };
+  const leftAnim = useRef(new Animated.Value(-deviceWidth)).current;
+
+  useEffect(() => {
+    console.log(leftAnim);
+    Animated.timing(leftAnim, {
+      toValue: selected * -deviceWidth,
+      duration: 200,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start();
+  }, [selected]);
 
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <SafeAreaView style={styles.container}>
-        <Tags
-          data={tags.data}
-          style={{ marginBottom: 10 }}
-          onPress={(item) => {
-            if (selectedTag.includes(item)) {
-              setSelectedTag(selectedTag.filter((v) => v !== item));
-            } else {
-              setSelectedTag([...selectedTag, item]);
-            }
-          }}
-        />
-        <Todos
-          data={
-            selectedTag.length === 0
-              ? todos.data
-              : todos.data.filter((v) => multiInlcudes(v.tags, selectedTag))
-          }
-          onPress={(item) => openEdit(item)}
-        />
-        <CircleButton
-          backgroundColor="#ffdbe7"
-          onPress={() => setAddWindow(true)}
-          style={styles.addButton}
-        >
-          <Octicons name="plus" size={24} color="black" borderRadius={100} />
-        </CircleButton>
-        {addWindow ? (
-          <AddWindow
-            tags={tags}
-            onSubmit={onSubmit}
-            onCancel={onCancel}
-            item={selected}
-          />
-        ) : (
-          <></>
-        )}
+        <View style={styles.contents}>
+          {tabs.map((tab, i) => (
+            <Animated.View
+              style={{ ...styles.content, left: leftAnim }}
+              key={i}
+            >
+              {tab.content}
+            </Animated.View>
+          ))}
+        </View>
+        <View style={styles.menus}>
+          {tabs.map((tab, i) => (
+            <CircleButton
+              style={styles.menu}
+              onPress={() => setSelected(i)}
+              key={i}
+            >
+              {tab.menu}
+            </CircleButton>
+          ))}
+        </View>
       </SafeAreaView>
     </>
   );
-}
-
-function multiInlcudes(arr, search) {
-  let res = true;
-  for (let i = 0; i < search.length; i++) {
-    const e = search[i];
-    res = arr.includes(e);
-    if (!res) break;
-  }
-  return res;
 }
 
 const styles = StyleSheet.create({
@@ -106,11 +88,25 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
-  addButton: {
-    width: 50,
-    height: 50,
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
+  contents: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+  },
+
+  content: {
+    width: deviceWidth,
+    left: 0,
+  },
+
+  menus: {
+    height: 70,
+    backgroundColor: '#ffbdbd',
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+  },
+
+  menu: {
+    flex: 1,
   },
 });
