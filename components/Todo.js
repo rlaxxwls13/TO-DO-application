@@ -1,10 +1,10 @@
-import { StyleSheet, FlatList, Text, Pressable } from 'react-native';
+import { View, StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Tags } from './Tag';
 
 /**
  * 할일 리스트 UI
- * @param {{name: string, desc: string, tags: typeof tagState, startDate, endDate}[]} data 할일 오브젝트 배열
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date}[]} data 할일 오브젝트 배열
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @returns
  */
@@ -18,7 +18,7 @@ export const Todos = ({ data, onPress = () => {} }) => (
 
 /**
  * 할일 UI
- * @param {{name: string, desc: string, tags: typeof tagState, startDate, endDate}} item 할일 오브젝트
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date}} item 할일 오브젝트
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @returns
  */
@@ -31,10 +31,10 @@ export const Todo = ({ item, onPress }) => {
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <div>
-        <Text>{item.startDate}</Text>
-        <Text>{item.endDate}</Text>
-      </div>
+      <View>
+        <Text>{item.startDate.toLocaleDateString()}</Text>
+        <Text>{item.endDate.toLocaleDateString()}</Text>
+      </View>
     </Pressable>
   );
 };
