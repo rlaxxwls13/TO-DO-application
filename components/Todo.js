@@ -1,6 +1,7 @@
 import { View, StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Tags } from './Tag';
+import * as Progress from 'react-native-progress';
 
 /**
  * 할일 리스트 UI
@@ -22,6 +23,14 @@ export const Todos = ({ data, onPress = () => {} }) => (
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @returns
  */
+
+  //입력된 두 날짜의 차이를 계산하는 함수
+  const remainingDay =(start, end) => {
+  return Math.round(Math.abs(
+    (new Date(start).getTime() - new Date(end).getTime()) / (1000 * 3600 * 24)
+  ))
+}
+
 export const Todo = ({ item, onPress }) => {
   let [pressed, setPressed] = useState(false);
   const _onPress = () => {
@@ -31,9 +40,10 @@ export const Todo = ({ item, onPress }) => {
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <View>
-        <Text>{"시작일: " + item.startDate.toLocaleDateString()}</Text>
-        <Text>{"종료일: " + item.endDate.toLocaleDateString()}</Text>
+      <Progress.Bar progress={1 - (remainingDay(new Date(), item.endDate) / remainingDay(item.startDate, item.endDate))} width={350}/>
+      <View style={styles.date}>
+        <Text>{item.startDate.toLocaleDateString() + " ~ "}</Text>
+        <Text>{item.endDate.toLocaleDateString()}</Text>
       </View>
     </Pressable>
   );
@@ -56,5 +66,9 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 10,
     alignSelf: 'center',
+  },
+
+  date: {
+    flexDirection: 'row',
   },
 });
