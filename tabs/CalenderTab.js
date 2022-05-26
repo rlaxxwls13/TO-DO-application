@@ -1,12 +1,18 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 
-export default function CalenderTab() {
+export default function CalenderTab(todos) {
   return (
     <View>
       <Text>CalenderTab</Text>
       <View style={styles.calender}>
-        <Calendar />
+        <Calendar
+          markingType='period'
+          markedDates={{
+            '2022-05-20': { startingDay: true, color: 'green' },
+            '2022-05-30': { endingDay: true, color: 'green' },
+          }}
+        />
       </View>
     </View>
   );
