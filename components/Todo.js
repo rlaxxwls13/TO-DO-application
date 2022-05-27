@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Tags } from './Tag';
 import * as Progress from 'react-native-progress';
 
+
 /**
  * 할일 리스트 UI
  * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date}[]} data 할일 오브젝트 배열
@@ -26,9 +27,9 @@ export const Todos = ({ data, onPress = () => {} }) => (
 
   //입력된 두 날짜의 차이를 계산하는 함수
   const remainingDay =(start, end) => {
-  return Math.round(Math.abs(
-    (new Date(start).getTime() - new Date(end).getTime()) / (1000 * 3600 * 24)
-  ))
+  return Math.abs(
+    (new Date(start).getTime() - new Date(end).getTime()) / (1000 * 60)
+  )
 }
 
 export const Todo = ({ item, onPress }) => {
@@ -36,14 +37,31 @@ export const Todo = ({ item, onPress }) => {
   const _onPress = () => {
     onPress(item);
   };
+
+  let currentProgress = remainingDay(new Date(), item.endDate)
+  let fullProgress = remainingDay(item.startDate, item.endDate)
+
+  let remainDay = currentProgress / (60 * 24)
+  let remainHour = (currentProgress - remainDay * 60) / 60
+  let remainMinute = (remainHour % 1) * 60
+
+  console.log(remainDay)
+  console.log(remainHour)
+  console.log(remainMinute)
+
   return (
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <Progress.Bar progress={1 - (remainingDay(new Date(), item.endDate) / remainingDay(item.startDate, item.endDate))} width={350}/>
+      <Progress.Bar progress={1 - (currentProgress/fullProgress)} width={350}/>
       <View style={styles.date}>
         <Text>{item.startDate.toLocaleDateString() + " ~ "}</Text>
         <Text>{item.endDate.toLocaleDateString()}</Text>
+        <Text> 남은 시간: {
+        (remainDay > 1) ?
+        Math.floor(remainDay) + '일 ' + Math.round(remainHour) + '시간' : 
+        Math.floor(remainHour) + '시간' + Math.round(remainMinute) + '분'
+        }</Text>
       </View>
     </Pressable>
   );

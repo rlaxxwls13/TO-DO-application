@@ -1,7 +1,26 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 
+
+function getPeriod(startDate, endDate){
+  const date = new Date(startDate);
+  const dates = [];
+  const period = {};
+
+  while (date <= endDate){
+    dates.push(new Date(date));
+    date.setDate(date.getDate()+1);
+  }
+  console.log(dates);
+  return dates; 
+  }
+
 export default function CalenderTab(todos) {
+  
+  let data = todos.todos.data
+
+
+
   return (
     <View>
       <Text>CalenderTab</Text>
@@ -9,8 +28,9 @@ export default function CalenderTab(todos) {
         <Calendar
           markingType='period'
           markedDates={{
-            '2022-05-20': { startingDay: true, color: 'green' },
-            '2022-05-30': { endingDay: true, color: 'green' },
+            '2022-05-20': { startingDay: true, color: 'rgb(167,224,163)' },
+            '2022-05-21':{color: 'rgb(167,224,163)'},
+            '2022-05-30': { endingDay: true, color: 'rgb(167,224,163)' },
           }}
         />
       </View>
