@@ -1,38 +1,49 @@
+import { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import CircleButton from '../components/CircleButton';
+import { Octicons } from '@expo/vector-icons';
 
-
-function getPeriod(startDate, endDate){
-  const date = new Date(startDate);
-  const dates = [];
+//날짜 사이의 기간을 색칠해서 리턴하는 함수
+function getPeriod(dataArr) {
   const period = {};
+  for (let i = 0; i < dataArr.length; i++) {
+    const date = new Date(dataArr[i].startDate);
+    const dates = [];
 
-  while (date <= endDate){
-    dates.push(new Date(date));
-    date.setDate(date.getDate()+1);
+    while (date <= dataArr[i].endDate) {
+      dates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+
+    for (let k = 0; k < dates.length; k++) {
+      const key = (dates[k].toISOString()).substring(0,10);
+      if(k===0) period[key] = { color: 'rgb(167,224,163)', startingDay: true };
+      else if(k===dates.length-1) period[key] = { color: 'rgb(167,224,163)', endingDay: true };
+      else period[key] = { color: 'rgb(167,224,163)'};
+    }
   }
-  console.log(dates);
-  return dates; 
-  }
+  return period;
+}
 
 export default function CalenderTab(todos) {
-  
-  let data = todos.todos.data
+  let data = todos.todos.data;
 
+  const [markedDate, setMarkedDate] = useState({});
 
+  const onPress = () => {
+    setMarkedDate((current) => getPeriod(data));
+    console.log(markedDate);
+  };
 
   return (
     <View>
       <Text>CalenderTab</Text>
+      <CircleButton onPress={onPress} color="#ffffff">
+        <Octicons name="plus" size={24} color="black" borderRadius={100} />
+      </CircleButton>
       <View style={styles.calender}>
-        <Calendar
-          markingType='period'
-          markedDates={{
-            '2022-05-20': { startingDay: true, color: 'rgb(167,224,163)' },
-            '2022-05-21':{color: 'rgb(167,224,163)'},
-            '2022-05-30': { endingDay: true, color: 'rgb(167,224,163)' },
-          }}
-        />
+        <Calendar markingType="period" markedDates={markedDate} />
       </View>
     </View>
   );

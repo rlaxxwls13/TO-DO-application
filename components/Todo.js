@@ -42,12 +42,8 @@ export const Todo = ({ item, onPress }) => {
   let fullProgress = remainingDay(item.startDate, item.endDate)
 
   let remainDay = currentProgress / (60 * 24)
-  let remainHour = (currentProgress - remainDay * 60) / 60
+  let remainHour = (currentProgress % (24 * 60)) / 60
   let remainMinute = (remainHour % 1) * 60
-
-  console.log(remainDay)
-  console.log(remainHour)
-  console.log(remainMinute)
 
   return (
     <Pressable style={styles.todo} onPress={_onPress}>
@@ -59,8 +55,8 @@ export const Todo = ({ item, onPress }) => {
         <Text>{item.endDate.toLocaleDateString()}</Text>
         <Text> 남은 시간: {
         (remainDay > 1) ?
-        Math.floor(remainDay) + '일 ' + Math.round(remainHour) + '시간' : 
-        Math.floor(remainHour) + '시간' + Math.round(remainMinute) + '분'
+        Math.floor(remainDay) + '일 ' + Math.floor(remainHour) + '시간' : 
+        Math.floor(remainHour) + '시간' + Math.floor(remainMinute) + '분'
         }</Text>
       </View>
     </Pressable>
