@@ -7,22 +7,27 @@ import { Octicons } from '@expo/vector-icons';
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
 function getPeriod(dataArr) {
   const period = {};
+
   for (let i = 0; i < dataArr.length; i++) {
     const date = new Date(dataArr[i].startDate);
     const dates = [];
+    const color = dataArr[i].tags[0]?.color === undefined ? '#a7e0a3' : dataArr[i].tags[0].color
 
     while (date <= dataArr[i].endDate) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
+    dates.push(new Date(dataArr[i].endDate));
 
     for (let k = 0; k < dates.length; k++) {
-      const key = (dates[k].toISOString()).substring(0,10);
-      if(k===0) period[key] = { color: 'rgb(167,224,163)', startingDay: true };
-      else if(k===dates.length-1) period[key] = { color: 'rgb(167,224,163)', endingDay: true };
-      else period[key] = { color: 'rgb(167,224,163)'};
+      const key = dates[k].toISOString().substring(0, 10);
+      if (k === 0) period[key] = { color: color, startingDay: true };
+      else if (k === dates.length - 1)
+        period[key] = { color: color, endingDay: true };
+      else period[key] = { color: color };
     }
   }
+
   return period;
 }
 
@@ -33,7 +38,6 @@ export default function CalenderTab(todos) {
 
   const onPress = () => {
     setMarkedDate((current) => getPeriod(data));
-    console.log(markedDate);
   };
 
   return (
