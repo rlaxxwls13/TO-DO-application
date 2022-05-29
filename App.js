@@ -22,7 +22,7 @@ export default function App() {
 
   const tabs = [
     {
-      content: <CalenderTab />,
+      content: <CalenderTab todos={todos} />,
       menu: <Text>Calender</Text>,
     },
     {
