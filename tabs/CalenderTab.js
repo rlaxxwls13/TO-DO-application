@@ -2,30 +2,48 @@ import { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import CircleButton from '../components/CircleButton';
-import { Octicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
+const period = {};
+
 function getPeriod(dataArr) {
-  const period = {};
 
   for (let i = 0; i < dataArr.length; i++) {
     const date = new Date(dataArr[i].startDate);
     const dates = [];
-    const color = dataArr[i].tags[0]?.color === undefined ? '#a7e0a3' : dataArr[i].tags[0].color
+    const color =
+      dataArr[i].tags[0]?.color === undefined
+        ? '#a7e0a3'
+        : dataArr[i].tags[0].color;
 
     while (date <= dataArr[i].endDate) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
-    dates.push(new Date(dataArr[i].endDate));
 
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
-      if (k === 0) period[key] = { color: color, startingDay: true };
-      else if (k === dates.length - 1)
-        period[key] = { color: color, endingDay: true };
-      else period[key] = { color: color };
+      if (!(key in period)) period[key] = {periods: []}
+      else period[key] = {periods: [...period[key].periods]}
     }
+
+    for (let k = 0; k < dates.length; k++) {
+      const key = dates[k].toISOString().substring(0, 10);
+      let isUnique = true
+      
+      for(let j=0;j<period[key].periods.length;j++){
+        if (period[key].periods[j].name === dataArr[i].name) isUnique = false
+      }
+
+      if (k===0 && isUnique) period[key].periods.push({startingDay: true, color: color, name: dataArr[i].name});
+      else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: color, name: dataArr[i].name});
+      else if(isUnique) period[key].periods.push({color: color, name: dataArr[i].name});
+
+      const set = new Set(period[key].periods)
+      period[key].periods = [...set]
+    }
+    
   }
 
   return period;
@@ -44,15 +62,16 @@ export default function CalenderTab(todos) {
     <View>
       <Text>CalenderTab</Text>
       <CircleButton onPress={onPress} color="#ffffff">
-        <Octicons name="plus" size={24} color="black" borderRadius={100} />
+        <Ionicons name="md-refresh" size={24} color="black" />
       </CircleButton>
       <View style={styles.calender}>
-        <Calendar markingType="period" markedDates={markedDate} />
+        <Calendar markingType="multi-period" markedDates={markedDate} />
       </View>
     </View>
   );
 }
 
+//달력을 한국어로 바꾸는 코드
 LocaleConfig.locales['kr'] = {
   monthNames: [
     '1월',
@@ -96,6 +115,7 @@ LocaleConfig.locales['kr'] = {
 };
 LocaleConfig.defaultLocale = 'kr';
 
+//스타일
 const styles = StyleSheet.create({
   calender: {
     alignContent: 'center',
