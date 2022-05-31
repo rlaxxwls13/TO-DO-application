@@ -54,6 +54,7 @@ export default function TodoTab({ todos, tags }) {
             : todos.data.filter((v) => multiInlcudes(v.tags, selectedTag))
         }
         onPress={(item) => openEdit(item)}
+        onSuccess={(i) => todos.updateSuccessed(i)}
       />
       <CircleButton
         backgroundColor="#ffdbe7"
