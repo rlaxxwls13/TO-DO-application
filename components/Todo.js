@@ -1,63 +1,81 @@
 import { View, StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Tags } from './Tag';
+import { Octicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
-
+import CircleButton from './CircleButton';
 
 /**
  * 할일 리스트 UI
- * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date}[]} data 할일 오브젝트 배열
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date, successed: boolean}[]} data 할일 오브젝트 배열
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
+ * @param {void} onSuccess 완료 이벤트, 전달 값: index
  * @returns
  */
-export const Todos = ({ data, onPress = () => {} }) => (
+export const Todos = ({ data, onPress = () => {}, onSuccess = () => {} }) => (
   <FlatList
     data={data}
-    renderItem={({ item }) => <Todo item={item} onPress={onPress} />}
+    renderItem={({ item, index }) => (
+      <Todo item={item} index={index} onPress={onPress} onSuccess={onSuccess} />
+    )}
     style={styles.todos}
   />
 );
 
-/**
- * 할일 UI
- * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date}} item 할일 오브젝트
- * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
- * @returns
- */
-
-  //입력된 두 날짜의 차이를 계산하는 함수
-  const remainingDay =(start, end) => {
+//입력된 두 날짜의 차이를 계산하는 함수
+const remainingDay = (start, end) => {
   return Math.abs(
     (new Date(start).getTime() - new Date(end).getTime()) / (1000 * 60)
-  )
-}
+  );
+};
 
-export const Todo = ({ item, onPress }) => {
+/**
+ * 할일 UI
+ * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date, successed: boolean}} item 할일 오브젝트
+ * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
+ * @param {void} onSuccess 완료 이벤트, 전달 값: index
+ * @returns
+ */
+export const Todo = ({ item, index, onPress, onSuccess }) => {
   let [pressed, setPressed] = useState(false);
   const _onPress = () => {
     onPress(item);
   };
 
-  let currentProgress = remainingDay(new Date(), item.endDate)
-  let fullProgress = remainingDay(item.startDate, item.endDate)
+  const _onSuccess = () => {
+    onSuccess(index);
+  };
 
-  let remainDay = currentProgress / (60 * 24)
-  let remainHour = (currentProgress % (24 * 60)) / 60
-  let remainMinute = (remainHour % 1) * 60
+  let currentProgress = remainingDay(new Date(), item.endDate);
+  let fullProgress = remainingDay(item.startDate, item.endDate);
+
+  let remainDay = currentProgress / (60 * 24);
+  let remainHour = (currentProgress % (24 * 60)) / 60;
+  let remainMinute = (remainHour % 1) * 60;
 
   return (
     <Pressable style={styles.todo} onPress={_onPress}>
       <Tags data={item.tags} />
       <Text>{item.name}</Text>
-      <Progress.Bar progress={1 - (currentProgress/fullProgress)} width={350}/>
+      <Progress.Bar progress={1 - currentProgress / fullProgress} width={350} />
       <View style={styles.date}>
-        <Text>{item.startDate.toLocaleDateString() + " ~ "}</Text>
+        <Text>{item.startDate.toLocaleDateString() + ' ~ '}</Text>
         <Text>{item.endDate.toLocaleDateString()}</Text>
-        <Text> 남은 시간: {
-        (remainDay > 1) ?
-        Math.floor(remainDay) + '일 ' + Math.floor(remainHour) + '시간' : 
-        Math.floor(remainHour) + '시간' + Math.floor(remainMinute) + '분'
-        }</Text>
+        <Text>
+          {' '}
+          남은 시간:{' '}
+          {remainDay > 1
+            ? Math.floor(remainDay) + '일 ' + Math.floor(remainHour) + '시간'
+            : Math.floor(remainHour) + '시간' + Math.floor(remainMinute) + '분'}
+        </Text>
+        <CircleButton width={30} height={30} onPress={_onSuccess}>
+          <Octicons
+            name={item.successed ? 'check-circle-fill' : 'check-circle'}
+            size={24}
+            color="black"
+            borderRadius={100}
+          />
+        </CircleButton>
       </View>
     </Pressable>
   );
