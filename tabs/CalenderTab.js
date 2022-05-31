@@ -4,17 +4,30 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import CircleButton from '../components/CircleButton';
 import { Ionicons } from '@expo/vector-icons';
 
+
+function getRandomColor() {
+  const color = ['#']
+
+  for(let i = 0;i<6;i++){
+    color.push(Math.floor(Math.random() * 16).toString(16))
+  }
+
+  return color.join('')
+}
+
+
+
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
 const period = {};
 
-function getPeriod(dataArr) {
+export function getPeriod(dataArr) {
 
   for (let i = 0; i < dataArr.length; i++) {
     const date = new Date(dataArr[i].startDate);
     const dates = [];
     const color =
       dataArr[i].tags[0]?.color === undefined
-        ? '#a7e0a3'
+        ? getRandomColor()
         : dataArr[i].tags[0].color;
 
     while (date <= dataArr[i].endDate) {
@@ -39,9 +52,6 @@ function getPeriod(dataArr) {
       if (k===0 && isUnique) period[key].periods.push({startingDay: true, color: color, name: dataArr[i].name});
       else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: color, name: dataArr[i].name});
       else if(isUnique) period[key].periods.push({color: color, name: dataArr[i].name});
-
-      const set = new Set(period[key].periods)
-      period[key].periods = [...set]
     }
     
   }
