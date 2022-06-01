@@ -55,6 +55,7 @@ export default function TodoTab({ todos, tags }) {
         }
         onPress={(item) => openEdit(item)}
         onSuccess={(i) => todos.updateSuccessed(i)}
+        onDelete={(i) => todos.remove(i)}
       />
       <CircleButton
         backgroundColor="#ffdbe7"

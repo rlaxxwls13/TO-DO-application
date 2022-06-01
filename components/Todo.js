@@ -10,13 +10,25 @@ import CircleButton from './CircleButton';
  * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date, successed: boolean}[]} data 할일 오브젝트 배열
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @param {void} onSuccess 완료 이벤트, 전달 값: index
+ * @param {void} onDelete 완료 이벤트, 전달 값: index
  * @returns
  */
-export const Todos = ({ data, onPress = () => {}, onSuccess = () => {} }) => (
+export const Todos = ({
+  data,
+  onPress = () => {},
+  onSuccess = () => {},
+  onDelete = () => {},
+}) => (
   <FlatList
     data={data}
     renderItem={({ item, index }) => (
-      <Todo item={item} index={index} onPress={onPress} onSuccess={onSuccess} />
+      <Todo
+        item={item}
+        index={index}
+        onPress={onPress}
+        onSuccess={onSuccess}
+        onDelete={onDelete}
+      />
     )}
     style={styles.todos}
   />
@@ -36,7 +48,7 @@ const remainingDay = (start, end) => {
  * @param {void} onSuccess 완료 이벤트, 전달 값: index
  * @returns
  */
-export const Todo = ({ item, index, onPress, onSuccess }) => {
+export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
   let [pressed, setPressed] = useState(false);
   const _onPress = () => {
     onPress(item);
@@ -44,6 +56,10 @@ export const Todo = ({ item, index, onPress, onSuccess }) => {
 
   const _onSuccess = () => {
     onSuccess(index);
+  };
+
+  const _onDelete = () => {
+    onDelete(index);
   };
 
   let currentProgress = remainingDay(new Date(), item.endDate);
@@ -71,6 +87,14 @@ export const Todo = ({ item, index, onPress, onSuccess }) => {
         <CircleButton width={30} height={30} onPress={_onSuccess}>
           <Octicons
             name={item.successed ? 'check-circle-fill' : 'check-circle'}
+            size={24}
+            color="black"
+            borderRadius={100}
+          />
+        </CircleButton>
+        <CircleButton width={30} height={30} onPress={_onDelete}>
+          <Octicons
+            name="x-circle"
             size={24}
             color="black"
             borderRadius={100}
