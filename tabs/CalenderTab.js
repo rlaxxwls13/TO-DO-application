@@ -18,7 +18,6 @@ function getRandomColor() {
 
 
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
-const period = {};
 
 export function getPeriod(dataArr) {
 
@@ -60,9 +59,6 @@ export function getPeriod(dataArr) {
 }
 
 export default function CalenderTab(todos) {
-  let data = todos.todos.data;
-
-  const [markedDate, setMarkedDate] = useState({});
 
   const onPress = () => {
     setMarkedDate((current) => getPeriod(data));
@@ -75,7 +71,7 @@ export default function CalenderTab(todos) {
         <Ionicons name="md-refresh" size={24} color="black" />
       </CircleButton>
       <View style={styles.calender}>
-        <Calendar markingType="multi-period" markedDates={markedDate} />
+        <Calendar markingType="multi-period" markedDates={getPeriod(todos.todos.data)} />
       </View>
     </View>
   );
