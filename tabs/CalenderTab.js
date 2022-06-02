@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import CircleButton from '../components/CircleButton';
-import { Ionicons } from '@expo/vector-icons';
 
 
 function getRandomColor() {
@@ -27,24 +24,26 @@ export function getPeriod(dataArr) {
   for (let i = 0; i < dataArr.length; i++) {
     const date = new Date(dataArr[i].startDate);
     const dates = [];
-    const color =
-      dataArr[i].tags[0]?.color === undefined
-        ? random
-        : dataArr[i].tags[0].color;
-
+    
+    //dates 안에 두 날짜와 그 사이의 날짜를 추가
     while (date <= dataArr[i].endDate) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
 
+    //dates 안의 날짜를 key로 갖는 오브젝트 생성
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
       if (!(key in period)) period[key] = {periods: []}
       else period[key] = {periods: [...period[key].periods]}
     }
 
+    
+
+    //추가된 할 일의 name을 비교하여 이미 추가된 날짜인지 판별 후 아니면 새로 추가
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
+      const prevKey = k !== 0 ? dates[k-1].toISOString().substring(0, 10) : ''
       let isUnique = true
       
       for(let j=0;j<period[key].periods.length;j++){
@@ -52,8 +51,8 @@ export function getPeriod(dataArr) {
       }
 
       if (k===0 && isUnique) period[key].periods.push({startingDay: true, color: color, name: dataArr[i].name});
-      else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: color, name: dataArr[i].name});
-      else if(isUnique) period[key].periods.push({color: color, name: dataArr[i].name});
+      else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: period[prevKey].periods[0].color , name: dataArr[i].name});
+      else if(isUnique) period[key].periods.push({color: period[prevKey].periods[0].color, name: dataArr[i].name});
     }
     
   }
