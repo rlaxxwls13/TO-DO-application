@@ -40,7 +40,6 @@ export default function App() {
   const leftAnim = useRef(new Animated.Value(-deviceWidth)).current;
 
   useEffect(() => {
-    console.log(leftAnim);
     Animated.timing(leftAnim, {
       toValue: selected * -deviceWidth,
       duration: 200,
