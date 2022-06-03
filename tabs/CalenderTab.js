@@ -44,6 +44,7 @@ export function getPeriod(dataArr) {
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
       const prevKey = k !== 0 ? dates[k-1].toISOString().substring(0, 10) : ''
+      const color = dataArr[i].tags[0]?.color === undefined ? random : dataArr[i].tags[0].color
       let isUnique = true
       
       for(let j=0;j<period[key].periods.length;j++){
