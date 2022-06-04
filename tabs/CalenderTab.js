@@ -22,6 +22,9 @@ export function getPeriod(dataArr) {
   const random = getRandomColor()
 
   for (let i = 0; i < dataArr.length; i++) {
+
+    console.log(dataArr[i])
+
     const date = new Date(dataArr[i].startDate);
     const dates = [];
     
@@ -30,6 +33,9 @@ export function getPeriod(dataArr) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
+    if(!(dataArr[i].endDate in dates)) dates.push(dataArr[i].endDate)
+
+    console.log(dates)
 
     //dates 안의 날짜를 key로 갖는 오브젝트 생성
     for (let k = 0; k < dates.length; k++) {
@@ -63,11 +69,13 @@ export function getPeriod(dataArr) {
 
 export default function CalenderTab(todos) {
 
+  const markedDates = getPeriod(todos.todos.data)
+
   return (
     <View>
       <Text>CalenderTab</Text>
       <View style={styles.calender}>
-        <Calendar markingType="multi-period" markedDates={getPeriod(todos.todos.data)} />
+        <Calendar markingType="multi-period" markedDates={markedDates} />
       </View>
     </View>
   );
