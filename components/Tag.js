@@ -1,5 +1,6 @@
 import { StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
+import AutoView from './AutoView';
 
 /**
  * 태그 리스트 UI
@@ -49,7 +50,9 @@ export const Tag = ({ item, onPress, prePressed }) => {
       }}
       onPress={() => _onPress()}
     >
-      <Text styles={styles.name}>{item.name}</Text>
+      <AutoView />
+      <Text>{item.name}</Text>
+      <AutoView />
     </Pressable>
   );
 };
@@ -58,20 +61,15 @@ const styles = StyleSheet.create({
   tags: {
     flex: 1,
     width: '90%',
-    maxHeight: 30,
-    minHeight: 30,
+    maxHeight: 25,
+    minHeight: 25,
   },
 
   tag: {
-    heigh: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 9,
-    borderRadius: 10,
-    color: 'black',
+    heigh: 25,
+    width: 65,
+    alignItems: 'center',
+    borderRadius: 100,
     marginRight: 5,
-  },
-
-  name: {
-    textalign: 'center',
   },
 });
