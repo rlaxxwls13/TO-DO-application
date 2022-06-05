@@ -6,6 +6,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import AddTagWindow from './AddTagWindow';
 //dateTimePicker 임포트(날짜 선택창 추가하는 라이브러리임)
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import AutoView from './AutoView';
 
 /**
  * 할일 추가 창
@@ -69,43 +70,7 @@ export default function AddWindow({
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <TextInput
-          style={styles.addWindowTitle}
-          placeholder="제목"
-          onChangeText={setAddTodoTitle}
-          value={addTodoTitle}
-        />
-        <TextInput
-          style={styles.addWindowDesc}
-          placeholder="설명"
-          onChangeText={setAddTodoDesc}
-          value={addTodoDesc}
-        />
-        {/* 날짜 추가하는 버튼 */}
-        <View style={styles.datePicker}>
-          <CircleButton
-            width={100}
-            height={50}
-            onPress={() => showDatePicker(true)}
-          >
-            <Text>시작일</Text>
-            <Text>{addTodoStartDate.toLocaleDateString()}</Text>
-          </CircleButton>
-          <CircleButton
-            width={100}
-            height={50}
-            onPress={() => showDatePicker(false)}
-          >
-            <Text>종료일</Text>
-            <Text>{addTodoEndDate.toLocaleDateString()}</Text>
-          </CircleButton>
-        </View>
-        <DateTimePickerModal
-          isVisible={datePickerVisable}
-          mode="date"
-          onConfirm={onDateConfirm}
-          onCancel={hideDatePicker}
-        />
+        <Text style={styles.contentTitle}>Tags</Text>
         <View style={styles.buttons}>
           <Tags
             data={tags.data}
@@ -122,7 +87,54 @@ export default function AddWindow({
             <SimpleLineIcons name="plus" size={24} color="black" />
           </CircleButton>
         </View>
+        <Text style={styles.contentTitle}>제목</Text>
+        <TextInput
+          style={styles.addWindowTitle}
+          placeholder="제목"
+          onChangeText={setAddTodoTitle}
+          value={addTodoTitle}
+        />
+        {/* 날짜 추가하는 버튼 */}
+        <View style={styles.datePicker}>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(true)}
+          >
+            <Text style={styles.contentTitle}>시작일</Text>
+            <Text>{addTodoStartDate.toLocaleDateString()}</Text>
+          </CircleButton>
+          <CircleButton
+            width={100}
+            height={50}
+            onPress={() => showDatePicker(false)}
+          >
+            <Text style={styles.contentTitle}>종료일</Text>
+            <Text>{addTodoEndDate.toLocaleDateString()}</Text>
+          </CircleButton>
+        </View>
+        <Text style={styles.contentTitle}>설명</Text>
+        <TextInput
+          style={styles.addWindowDesc}
+          placeholder="설명"
+          onChangeText={setAddTodoDesc}
+          value={addTodoDesc}
+          multiline={true}
+        />
+        <DateTimePickerModal
+          isVisible={datePickerVisable}
+          mode="date"
+          onConfirm={onDateConfirm}
+          onCancel={hideDatePicker}
+        />
+        <View
+          style={{ height: 2, backgroundColor: '#b0b0b0', marginBottom: 20 }}
+        />
         <View style={styles.buttons}>
+          <CircleButton style={styles.button} onPress={onCancel}>
+            <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
+          </CircleButton>
+          <AutoView />
           <CircleButton
             style={styles.button}
             onPress={() => {
@@ -137,10 +149,9 @@ export default function AddWindow({
               }
             }}
           >
-            <SimpleLineIcons name="check" size={24} color="black" />
-          </CircleButton>
-          <CircleButton style={styles.button} onPress={onCancel}>
-            <SimpleLineIcons name="close" size={24} color="black" />
+            <Text style={{ fontSize: 20, color: '#2eb3b3' }}>
+              {item === undefined ? '추가' : '변경'}
+            </Text>
           </CircleButton>
         </View>
       </View>
@@ -159,23 +170,28 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffd6d655',
+    backgroundColor: '#91919155',
+    borderRadius: 10,
+  },
+
+  contentTitle: {
+    marginVertical: 10,
+    fontSize: 15,
+    color: '#2eb3b3',
   },
 
   content: {
-    width: '80%',
-    height: '50%',
-    backgroundColor: '#ffdbdb',
-    alignItems: 'center',
+    width: '70%',
+    height: '60%',
+    backgroundColor: 'white',
     padding: 30,
-    borderRadius: 20,
+    borderRadius: 5,
   },
 
   addWindowTitle: {
-    textAlign: 'center',
     fontSize: 25,
   },
 
@@ -184,14 +200,15 @@ const styles = StyleSheet.create({
   },
 
   addWindowDesc: {
-    textAlign: 'center',
     width: '80%',
     fontSize: 15,
     flex: 1,
+    textAlignVertical: 'top',
   },
 
   datePicker: {
     flexDirection: 'row',
+    alignSelf: 'center',
   },
 
   buttons: {

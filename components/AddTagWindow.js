@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Text } from 'react-native';
 import CircleButton from './CircleButton';
 import { ColorSwatch } from './ColorSwatch';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import AutoView from './AutoView';
 
 /**
  * 태그 추가 창
@@ -24,7 +25,19 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
           onChangeText={setName}
         />
         <ColorSwatch selectedState={selectedState} />
+        <View
+          style={{
+            width: '100%',
+            height: 2,
+            backgroundColor: '#b0b0b0',
+            marginVertical: 20,
+          }}
+        />
         <View style={styles.buttons}>
+          <CircleButton onPress={onCancel}>
+            <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
+          </CircleButton>
+          <AutoView />
           <CircleButton
             onPress={() => {
               if (name !== '' && selected !== '') {
@@ -35,10 +48,7 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
               }
             }}
           >
-            <SimpleLineIcons name="check" size={24} color="black" />
-          </CircleButton>
-          <CircleButton onPress={onCancel}>
-            <SimpleLineIcons name="close" size={24} color="black" />
+            <Text style={{ fontSize: 20, color: '#2eb3b3' }}>추가</Text>
           </CircleButton>
         </View>
       </View>
@@ -55,7 +65,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffd6d655',
+    backgroundColor: '#91919155',
   },
 
   content: {
@@ -63,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     padding: 30,
-    borderRadius: 20,
+    borderRadius: 5,
   },
 
   name: {

@@ -23,25 +23,25 @@ export default function App() {
   const tabs = [
     {
       content: <CalenderTab todos={todos} />,
-      menu: <Text>Calender</Text>,
+      menu: <Text style={styles.menuText}>달력</Text>,
     },
     {
       content: <TodoTab todos={todos} tags={tags} />,
-      menu: <Text>Todos</Text>,
+      menu: <Text style={styles.menuText}>할 일</Text>,
     },
     {
       content: <StatTab />,
-      menu: <Text>Stat</Text>,
+      menu: <Text style={styles.menuText}>통계</Text>,
     },
   ];
 
   const [selected, setSelected] = useState(1);
 
-  const leftAnim = useRef(new Animated.Value(-deviceWidth)).current;
+  const selectedAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    Animated.timing(leftAnim, {
-      toValue: selected * -deviceWidth,
+    Animated.timing(selectedAnim, {
+      toValue: selected,
       duration: 200,
       useNativeDriver: false,
       easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
@@ -55,7 +55,13 @@ export default function App() {
         <View style={styles.contents}>
           {tabs.map((tab, i) => (
             <Animated.View
-              style={{ ...styles.content, left: leftAnim }}
+              style={{
+                ...styles.content,
+                left: selectedAnim.interpolate({
+                  inputRange: [0, 2],
+                  outputRange: [0, -deviceWidth * 2],
+                }),
+              }}
               key={i}
             >
               {tab.content}
@@ -72,6 +78,17 @@ export default function App() {
               {tab.menu}
             </CircleButton>
           ))}
+          <View style={styles.selectedContainer}>
+            <Animated.View
+              style={{
+                ...styles.selected,
+                left: selectedAnim.interpolate({
+                  inputRange: [0, 2],
+                  outputRange: [`-${100 / 3}%`, `${100 / 3}%`],
+                }),
+              }}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </>
@@ -100,12 +117,39 @@ const styles = StyleSheet.create({
 
   menus: {
     height: 70,
-    backgroundColor: '#ffbdbd',
-    alignSelf: 'stretch',
+    backgroundColor: '#ededed',
+    width: '95%',
+    alignSelf: 'center',
+    borderRadius: 10,
     flexDirection: 'row',
   },
 
   menu: {
     flex: 1,
+  },
+
+  menuText: {
+    fontSize: 20,
+  },
+
+  selectedContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: -1,
+    paddingVertical: 5,
+  },
+
+  selected: {
+    width: '30%',
+    height: '90%',
+    backgroundColor: '#6b6b6b',
+    // position: 'absolute',
+    left: '0%',
+    borderRadius: 5,
   },
 });

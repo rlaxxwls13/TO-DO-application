@@ -77,11 +77,11 @@ export default function TodoTab({ todos, tags }) {
         onDelete={(i) => todos.remove(i)}
       />
       <CircleButton
-        backgroundColor="#ffdbe7"
+        backgroundColor="#ededed"
         onPress={() => setAddWindow(true)}
         style={styles.addButton}
       >
-        <Octicons name="plus" size={24} color="black" borderRadius={100} />
+        <Octicons name="plus" size={24} color="black" />
       </CircleButton>
       {addWindow ? (
         <AddWindow
