@@ -34,7 +34,7 @@ export default function App() {
       menu: <Text style={styles.menuText}>할 일</Text>,
     },
     {
-      content: <StatTab />,
+      content: <StatTab todos={todos} selectedTag={selectedTag} />,
       menu: <Text style={styles.menuText}>통계</Text>,
     },
   ];
