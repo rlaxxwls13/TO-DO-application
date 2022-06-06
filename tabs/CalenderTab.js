@@ -2,28 +2,13 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 
-function getRandomColor() {
-  const color = ['#']
-
-  for(let i = 0;i<6;i++){
-    color.push(Math.floor(Math.random() * 16).toString(16))
-  }
-
-  return color.join('')
-}
-
 
 
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
-const period = {}
-
 export function getPeriod(dataArr) {
-
-  const random = getRandomColor()
+  const period = {}
 
   for (let i = 0; i < dataArr.length; i++) {
-
-    console.log(dataArr[i])
 
     const date = new Date(dataArr[i].startDate);
     const dates = [];
@@ -35,7 +20,6 @@ export function getPeriod(dataArr) {
     }
     if(!(dataArr[i].endDate in dates)) dates.push(dataArr[i].endDate)
 
-    console.log(dates)
 
     //dates 안의 날짜를 key로 갖는 오브젝트 생성
     for (let k = 0; k < dates.length; k++) {
@@ -50,7 +34,7 @@ export function getPeriod(dataArr) {
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
       const prevKey = k !== 0 ? dates[k-1].toISOString().substring(0, 10) : ''
-      const color = dataArr[i].tags[0]?.color === undefined ? random : dataArr[i].tags[0].color
+      const color = dataArr[i].tags[0]?.color === undefined ? "#656A8F" : dataArr[i].tags[0].color
       let isUnique = true
       
       for(let j=0;j<period[key].periods.length;j++){
