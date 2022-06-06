@@ -1,5 +1,12 @@
-import { StyleSheet, View, TextInput, Button, Text } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+  Animated,
+  Easing,
+} from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
 import { Tags } from './Tag';
 import CircleButton from './CircleButton';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -34,6 +41,8 @@ export default function AddWindow({
   const [datePickerIsStart, setDatePickerIsStart] = useState(true);
   const [tagSelected, setTagSelected] = useState(undefined);
 
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     if (item !== undefined) {
       setAddTodoTags(item.tags);
@@ -42,6 +51,12 @@ export default function AddWindow({
       setAddTodoStartDate(item.startDate);
       setAddTodoEndate(item.endDate);
     }
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start();
   }, []);
 
   //날짜 선택기를 보여주고 숨기는 함수 + 어떤 날자를 선택하는지 결정함
@@ -78,10 +93,20 @@ export default function AddWindow({
     setAddTagWindow(false);
     const pos = tags.data.findIndex((v) => v === tagSelected);
     tags.remove(pos);
+    setTagSelected(undefined);
+  };
+
+  const close = (fun) => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start(fun);
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: opacityAnim }]}>
       <View style={styles.content}>
         <Text style={styles.contentTitle}>Tags</Text>
         <View style={styles.buttons}>
@@ -148,7 +173,7 @@ export default function AddWindow({
           style={{ height: 2, backgroundColor: '#b0b0b0', marginBottom: 20 }}
         />
         <View style={styles.buttons}>
-          <CircleButton style={styles.button} onPress={onCancel}>
+          <CircleButton style={styles.button} onPress={() => close(onCancel)}>
             <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
           </CircleButton>
           <AutoView />
@@ -156,13 +181,15 @@ export default function AddWindow({
             style={styles.button}
             onPress={() => {
               if (addTodoTitle !== '') {
-                onSubmit({
-                  name: addTodoTitle,
-                  desc: addTodoDesc,
-                  tags: addTodoTags,
-                  startDate: addTodoStartDate,
-                  endDate: addTodoEndDate,
-                });
+                close(() =>
+                  onSubmit({
+                    name: addTodoTitle,
+                    desc: addTodoDesc,
+                    tags: addTodoTags,
+                    startDate: addTodoStartDate,
+                    endDate: addTodoEndDate,
+                  })
+                );
               }
             }}
           >
@@ -182,7 +209,7 @@ export default function AddWindow({
       ) : (
         <></>
       )}
-    </View>
+    </Animated.View>
   );
 }
 

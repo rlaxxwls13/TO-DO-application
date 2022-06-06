@@ -1,8 +1,14 @@
-import { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  Animated,
+  Easing,
+} from 'react-native';
 import CircleButton from './CircleButton';
 import { ColorSwatch } from './ColorSwatch';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import AutoView from './AutoView';
 
 /**
@@ -23,8 +29,28 @@ export default function AddTagWindow({
   const selectedState = useState(item === undefined ? '' : item.color);
   const [selected, setSelected] = selectedState;
 
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start();
+  }, []);
+
+  const close = (fun) => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start(fun);
+  };
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: opacityAnim }]}>
       <View style={styles.content}>
         <TextInput
           style={styles.name}
@@ -42,13 +68,16 @@ export default function AddTagWindow({
           }}
         />
         <View style={styles.buttons}>
-          <CircleButton onPress={onCancel}>
+          <CircleButton onPress={() => close(onCancel)}>
             <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
           </CircleButton>
           {item === undefined ? (
             <AutoView />
           ) : (
-            <CircleButton onPress={() => onDelete(item)} style={{ flex: 1 }}>
+            <CircleButton
+              onPress={() => close(() => onDelete(item))}
+              style={{ flex: 1 }}
+            >
               <Text style={{ fontSize: 20, color: '#ff6b6b' }}>삭제</Text>
             </CircleButton>
           )}
@@ -56,10 +85,12 @@ export default function AddTagWindow({
           <CircleButton
             onPress={() => {
               if (name !== '' && selected !== '') {
-                onSubmit({
-                  name,
-                  color: selected,
-                });
+                close(() =>
+                  onSubmit({
+                    name,
+                    color: selected,
+                  })
+                );
               }
             }}
           >
@@ -69,7 +100,7 @@ export default function AddTagWindow({
           </CircleButton>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

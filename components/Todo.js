@@ -63,8 +63,8 @@ export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
     >
       <View style={styles.tags}>
         <AutoView />
-        {item.tags.map((tag) => (
-          <View style={{ ...styles.tag, backgroundColor: tag.color }} />
+        {item.tags.map((tag, i) => (
+          <View style={{ ...styles.tag, backgroundColor: tag.color }} key={i} />
         ))}
         <AutoView />
       </View>
