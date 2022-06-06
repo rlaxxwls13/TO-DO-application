@@ -1,4 +1,5 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import AutoView from './AutoView';
 
 /**
  * 디자인된 둥근 버튼
@@ -10,12 +11,30 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
  * @param {*} style
  * @returns
  */
-export default function CircleButton({ children, backgroundColor, onPress, padding, width, height, style }) {
+export default function CircleButton({
+  children,
+  backgroundColor,
+  onPress,
+  padding,
+  width,
+  height,
+  style,
+}) {
   return (
-    <TouchableOpacity onPress={onPress} style={{ ...styles.button, backgroundColor, padding, width, height, ...style }}>
-      <View style={{ flex: 1 }} />
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        ...styles.button,
+        backgroundColor,
+        padding,
+        width,
+        height,
+        ...style,
+      }}
+    >
+      <AutoView />
       {children}
-      <View style={{ flex: 1 }} />
+      <AutoView />
     </TouchableOpacity>
   );
 }
@@ -26,6 +45,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 50,
     height: 50,
-    alignItems: "center",
+    alignItems: 'center',
   },
 });

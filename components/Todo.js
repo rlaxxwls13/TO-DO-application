@@ -1,33 +1,37 @@
 import { View, StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
-import { Tags } from './Tag';
 import { Octicons } from '@expo/vector-icons';
-import * as Progress from 'react-native-progress';
 import CircleButton from './CircleButton';
+import AutoView from './AutoView';
 
 /**
  * 할일 리스트 UI
  * @param {{name: string, desc: string, tags: typeof tagState, startDate: Date, endDate: Date, successed: boolean}[]} data 할일 오브젝트 배열
  * @param {void} onPress 클릭시 이벤트, 전달 값: 할일 오브젝트
  * @param {void} onSuccess 완료 이벤트, 전달 값: index
+ * @param {void} onDelete 완료 이벤트, 전달 값: index
  * @returns
  */
-export const Todos = ({ data, onPress = () => {}, onSuccess = () => {} }) => (
+export const Todos = ({
+  data,
+  onPress = () => {},
+  onSuccess = () => {},
+  onDelete = () => {},
+}) => (
   <FlatList
     data={data}
     renderItem={({ item, index }) => (
-      <Todo item={item} index={index} onPress={onPress} onSuccess={onSuccess} />
+      <Todo
+        item={item}
+        index={index}
+        onPress={onPress}
+        onSuccess={onSuccess}
+        onDelete={onDelete}
+      />
     )}
     style={styles.todos}
   />
 );
-
-//입력된 두 날짜의 차이를 계산하는 함수
-const remainingDay = (start, end) => {
-  return Math.abs(
-    (new Date(start).getTime() - new Date(end).getTime()) / (1000 * 60)
-  );
-};
 
 /**
  * 할일 UI
@@ -36,7 +40,7 @@ const remainingDay = (start, end) => {
  * @param {void} onSuccess 완료 이벤트, 전달 값: index
  * @returns
  */
-export const Todo = ({ item, index, onPress, onSuccess }) => {
+export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
   let [pressed, setPressed] = useState(false);
   const _onPress = () => {
     onPress(item);
@@ -46,28 +50,32 @@ export const Todo = ({ item, index, onPress, onSuccess }) => {
     onSuccess(index);
   };
 
-  let currentProgress = remainingDay(new Date(), item.endDate);
-  let fullProgress = remainingDay(item.startDate, item.endDate);
+  const _onDelete = () => {
+    onDelete(index);
+  };
 
-  let remainDay = currentProgress / (60 * 24);
-  let remainHour = (currentProgress % (24 * 60)) / 60;
-  let remainMinute = (remainHour % 1) * 60;
+  const dday = item.endDate.getDate() - new Date().getDate();
 
   return (
-    <Pressable style={styles.todo} onPress={_onPress}>
-      <Tags data={item.tags} />
-      <Text>{item.name}</Text>
-      <Progress.Bar progress={1 - currentProgress / fullProgress} width={350} />
+    <Pressable
+      style={index === 0 ? { ...styles.todo, marginTop: 15 } : styles.todo}
+      onPress={_onPress}
+    >
+      <View style={styles.tags}>
+        <AutoView />
+        {item.tags.map((tag, i) => (
+          <View style={{ ...styles.tag, backgroundColor: tag.color }} key={i} />
+        ))}
+        <AutoView />
+      </View>
+      <View style={styles.content}>
+        <AutoView />
+        <Text style={styles.title}>{item.name}</Text>
+        <Text style={styles.desc}>{item.desc}</Text>
+        <AutoView />
+      </View>
       <View style={styles.date}>
-        <Text>{item.startDate.toLocaleDateString() + ' ~ '}</Text>
-        <Text>{item.endDate.toLocaleDateString()}</Text>
-        <Text>
-          {' '}
-          남은 시간:{' '}
-          {remainDay > 1
-            ? Math.floor(remainDay) + '일 ' + Math.floor(remainHour) + '시간'
-            : Math.floor(remainHour) + '시간' + Math.floor(remainMinute) + '분'}
-        </Text>
+        <AutoView />
         <CircleButton width={30} height={30} onPress={_onSuccess}>
           <Octicons
             name={item.successed ? 'check-circle-fill' : 'check-circle'}
@@ -76,7 +84,16 @@ export const Todo = ({ item, index, onPress, onSuccess }) => {
             borderRadius={100}
           />
         </CircleButton>
+        {dday < 0 ? (
+          <></>
+        ) : (
+          <Text style={styles.dday}>{dday == 0 ? 'D-DAY' : `D-${dday}`}</Text>
+        )}
+        <AutoView />
       </View>
+      <CircleButton width={25} height={25} onPress={_onDelete}>
+        <Octicons name="x" size={20} color="black" borderRadius={100} />
+      </CircleButton>
     </Pressable>
   );
 };
@@ -91,16 +108,55 @@ const styles = StyleSheet.create({
   todo: {
     width: '90%',
     height: 100,
+    flexDirection: 'row',
     borderRadius: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#ff9e9e',
-    padding: 8,
+    padding: 4,
     marginBottom: 10,
     alignSelf: 'center',
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
   },
 
   date: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginHorizontal: 5,
+    width: 60,
+  },
+
+  content: {
+    flex: 1,
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+
+  desc: {},
+
+  tags: {
+    width: 40,
+    marginHorizontal: 8,
+    alignItems: 'center',
+  },
+
+  tag: {
+    width: 30,
+    height: 10,
+    borderRadius: 100,
+    marginVertical: 2,
+  },
+
+  dday: {
+    fontSize: 20,
+    fontWeight: '500',
   },
 });
