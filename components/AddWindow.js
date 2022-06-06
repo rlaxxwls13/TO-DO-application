@@ -143,7 +143,7 @@ export default function AddWindow({
             height={50}
             onPress={() => showDatePicker(true)}
           >
-            <Text style={styles.contentTitle}>시작일</Text>
+            <Text style={styles.contentSmallTitle}>시작일</Text>
             <Text>{addTodoStartDate.toLocaleDateString()}</Text>
           </CircleButton>
           <CircleButton
@@ -151,7 +151,7 @@ export default function AddWindow({
             height={50}
             onPress={() => showDatePicker(false)}
           >
-            <Text style={styles.contentTitle}>종료일</Text>
+            <Text style={styles.contentSmallTitle}>종료일</Text>
             <Text>{addTodoEndDate.toLocaleDateString()}</Text>
           </CircleButton>
         </View>
@@ -227,13 +227,18 @@ const styles = StyleSheet.create({
   },
 
   contentTitle: {
-    marginVertical: 10,
+    marginTop: 10,
     fontSize: 15,
     color: '#2eb3b3',
   },
 
+  contentSmallTitle: {
+    fontSize: 12,
+    color: '#2eb3b3',
+  },
+
   content: {
-    width: '70%',
+    width: '80%',
     height: '60%',
     backgroundColor: 'white',
     padding: 30,
@@ -241,7 +246,7 @@ const styles = StyleSheet.create({
   },
 
   addWindowTitle: {
-    fontSize: 25,
+    fontSize: 20,
   },
 
   tags: {
@@ -262,7 +267,6 @@ const styles = StyleSheet.create({
 
   buttons: {
     flexDirection: 'row',
-    marginVertical: 5,
   },
 
   button: {

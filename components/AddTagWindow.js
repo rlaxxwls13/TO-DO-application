@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
     width: 400,
     backgroundColor: 'white',
     alignItems: 'center',
-    padding: 30,
+    padding: 20,
     borderRadius: 5,
   },
 
   name: {
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 20,
     marginBottom: 10,
   },
 
