@@ -1,48 +1,106 @@
-import { useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  Animated,
+  Easing,
+} from 'react-native';
 import CircleButton from './CircleButton';
 import { ColorSwatch } from './ColorSwatch';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import AutoView from './AutoView';
 
 /**
  * 태그 추가 창
+ * @param {*} item 기존 태그 오브젝트
  * @param {void} onSubmit 확인 버튼 이벤트, 전달 값: 태그 오브젝트
  * @param {void} onCancel 취소 버튼 이벤트
+ * @param {void} onDelete 삭제 버튼 이벤트, 전달 값: 태그 오브젝트
  * @returns
  */
-export default function AddTagWindow({ onSubmit, onCancel }) {
-  const [name, setName] = useState('');
-  const selectedState = useState('');
+export default function AddTagWindow({
+  item = undefined,
+  onSubmit,
+  onCancel,
+  onDelete,
+}) {
+  const [name, setName] = useState(item === undefined ? '' : item.name);
+  const selectedState = useState(item === undefined ? '' : item.color);
   const [selected, setSelected] = selectedState;
 
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start();
+  }, []);
+
+  const close = (fun) => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: false,
+      easing: Easing.bezier(0.3, 0.01, 0.42, 0.99),
+    }).start(fun);
+  };
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: opacityAnim }]}>
       <View style={styles.content}>
         <TextInput
           style={styles.name}
           placeholder="태그 이름"
           onChangeText={setName}
+          value={name}
         />
         <ColorSwatch selectedState={selectedState} />
+        <View
+          style={{
+            width: '100%',
+            height: 2,
+            backgroundColor: '#b0b0b0',
+            marginVertical: 20,
+          }}
+        />
         <View style={styles.buttons}>
+          <CircleButton onPress={() => close(onCancel)}>
+            <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
+          </CircleButton>
+          {item === undefined ? (
+            <AutoView />
+          ) : (
+            <CircleButton
+              onPress={() => close(() => onDelete(item))}
+              style={{ flex: 1 }}
+            >
+              <Text style={{ fontSize: 20, color: '#ff6b6b' }}>삭제</Text>
+            </CircleButton>
+          )}
+
           <CircleButton
             onPress={() => {
               if (name !== '' && selected !== '') {
-                onSubmit({
-                  name,
-                  color: selected,
-                });
+                close(() =>
+                  onSubmit({
+                    name,
+                    color: selected,
+                  })
+                );
               }
             }}
           >
-            <SimpleLineIcons name="check" size={24} color="black" />
-          </CircleButton>
-          <CircleButton onPress={onCancel}>
-            <SimpleLineIcons name="close" size={24} color="black" />
+            <Text style={{ fontSize: 20, color: '#2eb3b3' }}>
+              {item === undefined ? '추가' : '변경'}
+            </Text>
           </CircleButton>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -55,7 +113,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffd6d655',
+    backgroundColor: '#91919155',
   },
 
   content: {
@@ -63,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     padding: 30,
-    borderRadius: 20,
+    borderRadius: 5,
   },
 
   name: {
