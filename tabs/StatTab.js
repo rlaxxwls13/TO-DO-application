@@ -10,7 +10,7 @@ export default function StatTab({ todos, selectedTag }) {
 
   useEffect(() => {
     setTodo(mode);
-  }, [mode, selectedTag]);
+  }, [todos, mode, selectedTag]);
 
   const setTodo = (i) => {
     const now = new Date();
