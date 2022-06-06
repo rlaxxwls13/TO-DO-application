@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import CircleButton from '../components/CircleButton';
-import { Ionicons } from '@expo/vector-icons';
 
 
 function getRandomColor() {
@@ -18,31 +15,42 @@ function getRandomColor() {
 
 
 //날짜 사이의 기간을 색칠해서 리턴하는 함수
-const period = {};
+const period = {}
 
 export function getPeriod(dataArr) {
 
+  const random = getRandomColor()
+
   for (let i = 0; i < dataArr.length; i++) {
+
+    console.log(dataArr[i])
+
     const date = new Date(dataArr[i].startDate);
     const dates = [];
-    const color =
-      dataArr[i].tags[0]?.color === undefined
-        ? getRandomColor()
-        : dataArr[i].tags[0].color;
-
+    
+    //dates 안에 두 날짜와 그 사이의 날짜를 추가
     while (date <= dataArr[i].endDate) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
+    if(!(dataArr[i].endDate in dates)) dates.push(dataArr[i].endDate)
 
+    console.log(dates)
+
+    //dates 안의 날짜를 key로 갖는 오브젝트 생성
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
       if (!(key in period)) period[key] = {periods: []}
       else period[key] = {periods: [...period[key].periods]}
     }
 
+    
+
+    //추가된 할 일의 name을 비교하여 이미 추가된 날짜인지 판별 후 아니면 새로 추가
     for (let k = 0; k < dates.length; k++) {
       const key = dates[k].toISOString().substring(0, 10);
+      const prevKey = k !== 0 ? dates[k-1].toISOString().substring(0, 10) : ''
+      const color = dataArr[i].tags[0]?.color === undefined ? random : dataArr[i].tags[0].color
       let isUnique = true
       
       for(let j=0;j<period[key].periods.length;j++){
@@ -50,8 +58,8 @@ export function getPeriod(dataArr) {
       }
 
       if (k===0 && isUnique) period[key].periods.push({startingDay: true, color: color, name: dataArr[i].name});
-      else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: color, name: dataArr[i].name});
-      else if(isUnique) period[key].periods.push({color: color, name: dataArr[i].name});
+      else if(k=== dates.length-1 && isUnique) period[key].periods.push({endingDay: true, color: period[prevKey].periods[0].color , name: dataArr[i].name});
+      else if(isUnique) period[key].periods.push({color: period[prevKey].periods[0].color, name: dataArr[i].name});
     }
     
   }
@@ -60,22 +68,14 @@ export function getPeriod(dataArr) {
 }
 
 export default function CalenderTab(todos) {
-  let data = todos.todos.data;
 
-  const [markedDate, setMarkedDate] = useState({});
-
-  const onPress = () => {
-    setMarkedDate((current) => getPeriod(data));
-  };
+  const markedDates = getPeriod(todos.todos.data)
 
   return (
     <View>
       <Text>CalenderTab</Text>
-      <CircleButton onPress={onPress} color="#ffffff">
-        <Ionicons name="md-refresh" size={24} color="black" />
-      </CircleButton>
       <View style={styles.calender}>
-        <Calendar markingType="multi-period" markedDates={markedDate} />
+        <Calendar markingType="multi-period" markedDates={markedDates} />
       </View>
     </View>
   );
