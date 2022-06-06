@@ -1,17 +1,13 @@
 import { StyleSheet, View, TextInput } from 'react-native';
 import { useState } from 'react';
 import { Octicons } from '@expo/vector-icons';
-import { Tags } from '../components/Tag';
 import { Todos } from '../components/Todo';
 import AddWindow from '../components/AddWindow';
 import CircleButton from '../components/CircleButton';
-import AutoView from '../components/AutoView';
-import AddTagWindow from '../components/AddTagWindow';
 
-export default function TodoTab({ todos, tags }) {
+export default function TodoTab({ todos, tags, selectedTag }) {
   const [addWindow, setAddWindow] = useState(false);
   const [selected, setSelected] = useState(undefined);
-  const [selectedTag, setSelectedTag] = useState([]);
   const [search, setSearch] = useState('');
 
   const onSubmit = ({ name, desc, tags, startDate, endDate }) => {
@@ -37,46 +33,8 @@ export default function TodoTab({ todos, tags }) {
     setSelected(item);
   };
 
-  const [addTagWindow, setAddTagWindow] = useState(false);
-  const [tagSelected, setTagSelected] = useState(undefined);
-
-  const onTagSubmit = (data) => {
-    setAddTagWindow(false);
-    const pos = tags.data.findIndex((v) => v === tagSelected);
-    tags.edit(pos, data);
-  };
-
-  const onTagDelete = (data) => {
-    setAddTagWindow(false);
-    const pos = tags.data.findIndex((v) => v === tagSelected);
-    console.log(pos);
-    tags.remove(pos);
-  };
-
-  const onTagCancel = () => {
-    setAddTagWindow(false);
-  };
-
   return (
     <>
-      <View style={styles.tags}>
-        <AutoView />
-        <Tags
-          data={tags.data}
-          onPress={(item) => {
-            if (selectedTag.includes(item)) {
-              setSelectedTag(selectedTag.filter((v) => v !== item));
-            } else {
-              setSelectedTag([...selectedTag, item]);
-            }
-          }}
-          onLongPress={(item) => {
-            setTagSelected(item);
-            setAddTagWindow(true);
-          }}
-        />
-        <AutoView />
-      </View>
       <View style={styles.search}>
         <View style={styles.searchIcon}>
           <Octicons name="search" size={24} color="black" borderRadius={100} />
@@ -114,16 +72,6 @@ export default function TodoTab({ todos, tags }) {
           onSubmit={onSubmit}
           onCancel={onCancel}
           item={selected}
-        />
-      ) : (
-        <></>
-      )}
-      {addTagWindow ? (
-        <AddTagWindow
-          onSubmit={onTagSubmit}
-          onCancel={onTagCancel}
-          onDelete={onTagDelete}
-          item={tagSelected}
         />
       ) : (
         <></>

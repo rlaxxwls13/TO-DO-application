@@ -1,8 +1,6 @@
 import { View, StyleSheet, FlatList, Text, Pressable } from 'react-native';
 import { useState } from 'react';
-import { Tags } from './Tag';
 import { Octicons } from '@expo/vector-icons';
-import * as Progress from 'react-native-progress';
 import CircleButton from './CircleButton';
 import AutoView from './AutoView';
 

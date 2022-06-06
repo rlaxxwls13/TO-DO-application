@@ -14,11 +14,15 @@ import TodoTab from './tabs/TodoTab';
 import CircleButton from './components/CircleButton';
 import CalenderTab from './tabs/CalenderTab';
 import StatTab from './tabs/StatTab';
+import { Tags } from './components/Tag';
+import AutoView from './components/AutoView';
+import AddTagWindow from './components/AddTagWindow';
 
 const deviceWidth = Dimensions.get('window').width;
 
 export default function App() {
   const { todos, tags } = useTodo();
+  const [selectedTag, setSelectedTag] = useState([]);
 
   const tabs = [
     {
@@ -26,7 +30,7 @@ export default function App() {
       menu: <Text style={styles.menuText}>달력</Text>,
     },
     {
-      content: <TodoTab todos={todos} tags={tags} />,
+      content: <TodoTab todos={todos} tags={tags} selectedTag={selectedTag} />,
       menu: <Text style={styles.menuText}>할 일</Text>,
     },
     {
@@ -48,10 +52,48 @@ export default function App() {
     }).start();
   }, [selected]);
 
+  const [addTagWindow, setAddTagWindow] = useState(false);
+  const [tagEditSelected, setTagEditSelected] = useState(undefined);
+
+  const onTagSubmit = (data) => {
+    setAddTagWindow(false);
+    const pos = tags.data.findIndex((v) => v === tagEditSelected);
+    tags.edit(pos, data);
+  };
+
+  const onTagDelete = (data) => {
+    setAddTagWindow(false);
+    const pos = tags.data.findIndex((v) => v === tagEditSelected);
+    console.log(pos);
+    tags.remove(pos);
+  };
+
+  const onTagCancel = () => {
+    setAddTagWindow(false);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <SafeAreaView style={styles.container}>
+        <View style={styles.tags}>
+          <AutoView />
+          <Tags
+            data={tags.data}
+            onPress={(item) => {
+              if (selectedTag.includes(item)) {
+                setSelectedTag(selectedTag.filter((v) => v !== item));
+              } else {
+                setSelectedTag([...selectedTag, item]);
+              }
+            }}
+            onLongPress={(item) => {
+              setTagEditSelected(item);
+              setAddTagWindow(true);
+            }}
+          />
+          <AutoView />
+        </View>
         <View style={styles.contents}>
           {tabs.map((tab, i) => (
             <Animated.View
@@ -98,6 +140,16 @@ export default function App() {
             />
           </View>
         </View>
+        {addTagWindow ? (
+          <AddTagWindow
+            onSubmit={onTagSubmit}
+            onCancel={onTagCancel}
+            onDelete={onTagDelete}
+            item={tagEditSelected}
+          />
+        ) : (
+          <></>
+        )}
       </SafeAreaView>
     </>
   );
@@ -107,9 +159,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
+  },
+
+  tags: {
+    height: 40,
+    marginHorizontal: 25,
+    padding: 5,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
   },
 
   contents: {
