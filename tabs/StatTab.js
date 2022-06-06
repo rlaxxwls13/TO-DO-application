@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: '600',
+    margin: 10,
   },
 
   button: {
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   contentTitle: {
     alignSelf: 'flex-start',
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: '600',
     margin: 10,
   },
 });

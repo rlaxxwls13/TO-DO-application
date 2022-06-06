@@ -15,8 +15,8 @@ import AutoView from './AutoView';
 export const Todos = ({
   data,
   onPress = () => {},
-  onSuccess = () => {},
-  onDelete = () => {},
+  onSuccess = undefined,
+  onDelete = undefined,
 }) => (
   <FlatList
     data={data}
@@ -76,14 +76,18 @@ export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
       </View>
       <View style={styles.date}>
         <AutoView />
-        <CircleButton width={30} height={30} onPress={_onSuccess}>
-          <Octicons
-            name={item.successed ? 'check-circle-fill' : 'check-circle'}
-            size={24}
-            color="black"
-            borderRadius={100}
-          />
-        </CircleButton>
+        {onSuccess !== undefined ? (
+          <CircleButton width={30} height={30} onPress={_onSuccess}>
+            <Octicons
+              name={item.successed ? 'check-circle-fill' : 'check-circle'}
+              size={24}
+              color="black"
+              borderRadius={100}
+            />
+          </CircleButton>
+        ) : (
+          <></>
+        )}
         {dday < 0 ? (
           <></>
         ) : (
@@ -91,9 +95,13 @@ export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
         )}
         <AutoView />
       </View>
-      <CircleButton width={25} height={25} onPress={_onDelete}>
-        <Octicons name="x" size={20} color="black" borderRadius={100} />
-      </CircleButton>
+      {onDelete !== undefined ? (
+        <CircleButton width={25} height={25} onPress={_onDelete}>
+          <Octicons name="x" size={20} color="black" borderRadius={100} />
+        </CircleButton>
+      ) : (
+        <></>
+      )}
     </Pressable>
   );
 };
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
   },
 
   dday: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: '500',
   },
 });
