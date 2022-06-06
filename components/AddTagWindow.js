@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Text } from 'react-native';
 import CircleButton from './CircleButton';
 import { ColorSwatch } from './ColorSwatch';
@@ -7,13 +7,20 @@ import AutoView from './AutoView';
 
 /**
  * 태그 추가 창
+ * @param {*} item 기존 태그 오브젝트
  * @param {void} onSubmit 확인 버튼 이벤트, 전달 값: 태그 오브젝트
  * @param {void} onCancel 취소 버튼 이벤트
+ * @param {void} onDelete 삭제 버튼 이벤트, 전달 값: 태그 오브젝트
  * @returns
  */
-export default function AddTagWindow({ onSubmit, onCancel }) {
-  const [name, setName] = useState('');
-  const selectedState = useState('');
+export default function AddTagWindow({
+  item = undefined,
+  onSubmit,
+  onCancel,
+  onDelete,
+}) {
+  const [name, setName] = useState(item === undefined ? '' : item.name);
+  const selectedState = useState(item === undefined ? '' : item.color);
   const [selected, setSelected] = selectedState;
 
   return (
@@ -23,6 +30,7 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
           style={styles.name}
           placeholder="태그 이름"
           onChangeText={setName}
+          value={name}
         />
         <ColorSwatch selectedState={selectedState} />
         <View
@@ -37,7 +45,14 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
           <CircleButton onPress={onCancel}>
             <Text style={{ fontSize: 20, color: '#b0b0b0' }}>취소</Text>
           </CircleButton>
-          <AutoView />
+          {item === undefined ? (
+            <AutoView />
+          ) : (
+            <CircleButton onPress={() => onDelete(item)} style={{ flex: 1 }}>
+              <Text style={{ fontSize: 20, color: '#ff6b6b' }}>삭제</Text>
+            </CircleButton>
+          )}
+
           <CircleButton
             onPress={() => {
               if (name !== '' && selected !== '') {
@@ -48,7 +63,9 @@ export default function AddTagWindow({ onSubmit, onCancel }) {
               }
             }}
           >
-            <Text style={{ fontSize: 20, color: '#2eb3b3' }}>추가</Text>
+            <Text style={{ fontSize: 20, color: '#2eb3b3' }}>
+              {item === undefined ? '추가' : '변경'}
+            </Text>
           </CircleButton>
         </View>
       </View>

@@ -86,6 +86,14 @@ export default function App() {
                   inputRange: [0, 2],
                   outputRange: [`-${100 / 3}%`, `${100 / 3}%`],
                 }),
+                transform: [
+                  {
+                    scale: selectedAnim.interpolate({
+                      inputRange: [0, 0.5, 1, 1.5, 2],
+                      outputRange: [1, 0.3, 1, 0.3, 1],
+                    }),
+                  },
+                ],
               }}
             />
           </View>

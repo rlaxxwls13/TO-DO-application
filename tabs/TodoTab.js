@@ -6,6 +6,7 @@ import { Todos } from '../components/Todo';
 import AddWindow from '../components/AddWindow';
 import CircleButton from '../components/CircleButton';
 import AutoView from '../components/AutoView';
+import AddTagWindow from '../components/AddTagWindow';
 
 export default function TodoTab({ todos, tags }) {
   const [addWindow, setAddWindow] = useState(false);
@@ -36,6 +37,26 @@ export default function TodoTab({ todos, tags }) {
     setSelected(item);
   };
 
+  const [addTagWindow, setAddTagWindow] = useState(false);
+  const [tagSelected, setTagSelected] = useState(undefined);
+
+  const onTagSubmit = (data) => {
+    setAddTagWindow(false);
+    const pos = tags.data.findIndex((v) => v === tagSelected);
+    tags.edit(pos, data);
+  };
+
+  const onTagDelete = (data) => {
+    setAddTagWindow(false);
+    const pos = tags.data.findIndex((v) => v === tagSelected);
+    console.log(pos);
+    tags.remove(pos);
+  };
+
+  const onTagCancel = () => {
+    setAddTagWindow(false);
+  };
+
   return (
     <>
       <View style={styles.tags}>
@@ -48,6 +69,10 @@ export default function TodoTab({ todos, tags }) {
             } else {
               setSelectedTag([...selectedTag, item]);
             }
+          }}
+          onLongPress={(item) => {
+            setTagSelected(item);
+            setAddTagWindow(true);
           }}
         />
         <AutoView />
@@ -89,6 +114,16 @@ export default function TodoTab({ todos, tags }) {
           onSubmit={onSubmit}
           onCancel={onCancel}
           item={selected}
+        />
+      ) : (
+        <></>
+      )}
+      {addTagWindow ? (
+        <AddTagWindow
+          onSubmit={onTagSubmit}
+          onCancel={onTagCancel}
+          onDelete={onTagDelete}
+          item={tagSelected}
         />
       ) : (
         <></>

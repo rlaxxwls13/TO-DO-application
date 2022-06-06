@@ -32,6 +32,7 @@ export default function AddWindow({
   const [datePickerVisable, setDatePickerVisable] = useState(false);
   //시작 날짜를 선택하는지 확인하는 state
   const [datePickerIsStart, setDatePickerIsStart] = useState(true);
+  const [tagSelected, setTagSelected] = useState(undefined);
 
   useEffect(() => {
     if (item !== undefined) {
@@ -58,13 +59,25 @@ export default function AddWindow({
 
   const [addTagWindow, setAddTagWindow] = useState(false);
 
-  const onTagSubmit = ({ name, color }) => {
+  const onTagSubmit = (data) => {
     setAddTagWindow(false);
-    tags.push({ name, color });
+    if (tagSelected === undefined) {
+      tags.push(data);
+    } else {
+      const pos = tags.data.findIndex((v) => v === tagSelected);
+      tags.edit(pos, data);
+      setTagSelected(undefined);
+    }
   };
 
   const onTagCancel = () => {
     setAddTagWindow(false);
+  };
+
+  const onTagDelete = (data) => {
+    setAddTagWindow(false);
+    const pos = tags.data.findIndex((v) => v === tagSelected);
+    tags.remove(pos);
   };
 
   return (
@@ -81,6 +94,10 @@ export default function AddWindow({
               } else {
                 setAddTodoTags([...addTodoTags, item]);
               }
+            }}
+            onLongPress={(item) => {
+              setTagSelected(item);
+              setAddTagWindow(true);
             }}
           />
           <CircleButton onPress={() => setAddTagWindow(true)}>
@@ -156,7 +173,12 @@ export default function AddWindow({
         </View>
       </View>
       {addTagWindow ? (
-        <AddTagWindow onSubmit={onTagSubmit} onCancel={onTagCancel} />
+        <AddTagWindow
+          onSubmit={onTagSubmit}
+          onCancel={onTagCancel}
+          onDelete={onTagDelete}
+          item={tagSelected}
+        />
       ) : (
         <></>
       )}
