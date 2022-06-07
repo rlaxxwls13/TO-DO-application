@@ -70,7 +70,6 @@ export default function CalenderTab(todos) {
 
   return (
     <View style={styles.container}>
-      <Text>CalenderTab</Text>
       <View style={styles.calender}>
         <Calendar markingType="multi-period" markedDates={markedDates} />
       </View>
