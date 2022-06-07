@@ -87,6 +87,7 @@ export default function AddWindow({
 
   const onTagCancel = () => {
     setAddTagWindow(false);
+    setTagSelected(undefined);
   };
 
   const onTagDelete = (data) => {

@@ -54,7 +54,9 @@ export const Todo = ({ item, index, onPress, onSuccess, onDelete }) => {
     onDelete(index);
   };
 
-  const dday = item.endDate.getDate() - new Date().getDate();
+  const dday = Math.ceil(
+    Math.abs(item.endDate - new Date()) / (1000 * 60 * 60 * 24)
+  );
 
   return (
     <Pressable
