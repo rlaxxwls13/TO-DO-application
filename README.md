@@ -63,6 +63,12 @@ React Native(Javascript)
 | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 |                                                                                                | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/todo.png)     | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/tag.png)      |
 
+## 스크린샷 (컴포넌트 구조 포함)
+
+| ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/calender_tab_detail.png) | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/todo_tab_detail.png) | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/stat_tab_detail.png) |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+|                                                                                                       | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/todo_detail.png)     | ![](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/tag_detail.png)      |
+
 ## 컴포넌트 데이터 흐름도![diagram](https://raw.githubusercontent.com/chjunyo/opensource_7/main/readme_files/diagram.png)
 
 - License 컴포넌트 생략
